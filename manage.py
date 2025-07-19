@@ -20,3 +20,12 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""
+
+python manage.py startapp lost_items
+python manage.py makemigrations lost_items
+python manage.py migrate
+python manage.py runserver
+
+"""
