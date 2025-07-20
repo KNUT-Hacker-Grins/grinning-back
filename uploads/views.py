@@ -14,7 +14,7 @@ from rest_framework import status
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def upload_image(request):
     """
     이미지 업로드 API
