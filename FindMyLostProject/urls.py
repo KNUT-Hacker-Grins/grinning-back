@@ -19,10 +19,17 @@ Including another URLconf
 # urlpatterns = [
 #     path("admin/", admin.site.urls),
 # ]
-
-from django.urls import path
+from django.contrib import admin
+from django.conf import settings
+from django.urls import path, include
 from lost_items.views import LostItemCreateView
+from django.conf.urls.static import static
 
 urlpatterns = [
+    path('api/upload/', include('uploads.urls')),
     path('api/lost-items', LostItemCreateView.as_view(), name='lostitem-create'),
 ]
+
+# 개발 환경에서만 미디어 파일 서빙
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
