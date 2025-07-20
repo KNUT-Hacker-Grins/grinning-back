@@ -20,11 +20,12 @@ Including another URLconf
 #     path("admin/", admin.site.urls),
 # ]
 from django.contrib import admin
-from django.conf import settings
 from django.urls import path, include
+from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
     path('api/upload/', include('uploads.urls')),
     path('api/lost-items/', include('lost_items.urls')),
 ]
