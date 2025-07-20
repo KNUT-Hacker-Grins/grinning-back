@@ -1,17 +1,55 @@
-from django.db import models
-
-# Create your models here.
+# lost_items/models.py
 import uuid
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator
+
 
 class LostItem(models.Model):
-    lost_item_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # 등록한 유저
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    found_at = models.DateTimeField()
-    location = models.CharField(max_length=200)
-    image_url = models.URLField(max_length=500)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    """잃어버린 물건 신고 모델"""
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )  # 고유 ID
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )  # 신고한 사용자
+
+    title = models.CharField(max_length=100)  # 분실물 제목
+    description = models.TextField()  # 상세 설명
+
+    lost_at = models.DateTimeField()  # 분실한 날짜/시간
+    lost_location = models.CharField(max_length=200)  # 분실한 장소
+
+    image_urls = models.JSONField(default=list)  # 이미지 URL 배열
+    category = models.CharField(max_length=50)  # 카테고리
+
+    reward = models.DecimalField(
+        max_digits=10,
+        decimal_places=0,
+        default=0,
+        validators=[MinValueValidator(0)]
+    )  # 현상금 (음수 방지)
+
+    status = models.CharField(
+        max_length=20,
+        default='searching',
+        choices=[
+            ('searching', '찾는 중'),
+            ('found', '찾음'),
+            ('cancelled', '취소')
+        ]
+    )  # 상태
+
+    created_at = models.DateTimeField(auto_now_add=True)  # 등록일시
+    updated_at = models.DateTimeField(auto_now=True)  # 수정일시
+
+    class Meta:
+        ordering = ['-created_at']  # 최신순 정렬
+
+    def __str__(self):
+        return f"{self.title} - {self.user.name}"
