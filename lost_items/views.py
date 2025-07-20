@@ -1,43 +1,63 @@
-from rest_framework import status
-from rest_framework import generics, permissions
+from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from .models import LostItem
 from .serializers import LostItemSerializer
 from accounts.models import User
 
-class LostItemCreateView(generics.CreateAPIView):
-    queryset = LostItem.objects.all()
+class LostItemViewSet(viewsets.ModelViewSet):
+    queryset = LostItem.objects.all().order_by('-id')   # 모델 PK명 정확히!
     serializer_class = LostItemSerializer
-    permission_classes = [permissions.AllowAny]  # MVP 인증 없음
+    permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
-        """
-        오브젝트(DB 레코드) 생성 로직을 담당.
-        → DB에 저장하는 "실제 행위"만 처리.
-        """
-        # user = self.request.user
-        user = User.objects.first()  # DB에 유저 반드시 있어야 함
-        serializer.save(user=user)  # 나중에 인증 붙이면 동작함
+        user = User.objects.first()  # MVP용 임시
+        serializer.save(user=user)
 
     def create(self, request, *args, **kwargs):
-        """
-        전체 POST 요청 처리 플로우를 담당.
-        요청 데이터 유효성 검사
-        perform_create 호출 (실제 저장)
-        응답 객체(Response) 생성
-        """
         response = super().create(request, *args, **kwargs)
-
         data = response.data
-        # 필요한 데이터 골라서 응답 객체 만들기 
         # data = {
-        #     "id": data["lost_item_id"],
-        #     "title": data["title"]
+        #     'id': data['id'],
+        #     'title' : data['title']
         # }
-        
         return Response({
             "status": "success",
             "code": 201,
             "data": data,
             "message": "등록 완료"
         }, status=status.HTTP_201_CREATED)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # category = self.request.query_params.get('category')
+        location = self.request.query_params.get('location')
+        # if category:
+        #     queryset = queryset.filter(category=category)
+        if location:
+            queryset = queryset.filter(location=location)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        try:
+            page = int(request.query_params.get('page', 1))
+            limit = int(request.query_params.get('limit', 10))
+        except ValueError:
+            page, limit = 1, 10
+        total = queryset.count()
+        start = (page - 1) * limit
+        end = start + limit
+        items = queryset[start:end]
+        serializer = self.get_serializer(items, many=True)
+        return Response({
+            "status": "success",
+            "code": 200,
+            "data": {
+                "items": serializer.data,
+                "page": page,
+                "limit": limit,
+                "total": total
+            },
+            "message": "조회 성공"
+        }, status=status.HTTP_200_OK)
