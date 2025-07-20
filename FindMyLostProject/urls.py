@@ -22,12 +22,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
-from lost_items.views import LostItemCreateView
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/upload/', include('uploads.urls')),
-    path('api/lost-items', LostItemCreateView.as_view(), name='lostitem-create'),
+    path('api/lost-items/', include('lost_items.urls')),
 ]
 
 # 개발 환경에서만 미디어 파일 서빙
