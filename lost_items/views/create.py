@@ -1,11 +1,7 @@
-# lost_items/views/create.py
-from datetime import datetime
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from ..models import LostItem
 from ..serializers import LostItemCreateSerializer
+from ..utils.responses import success_response, error_response
 
 
 @api_view(['POST'])
@@ -17,35 +13,29 @@ def create_lost_item(request):
     serializer = LostItemCreateSerializer(data=request.data)
 
     if not serializer.is_valid():
-        return Response({
-            "status": "error",
-            "code": 400,
-            "error": "입력 데이터가 올바르지 않습니다.",
-            "details": serializer.errors,
-            "timestamp": datetime.now().isoformat()
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return error_response(
+            error="입력 데이터가 올바르지 않습니다.",
+            code=400,
+            details=serializer.errors
+        )
 
     try:
-        # 2. 분실물 신고 생성 (JWT 인증된 사용자)
+        # 2. 분실물 신고 생성
         lost_item = serializer.save(user=request.user)
 
         # 3. 성공 응답
-        return Response({
-            "status": "success",
-            "code": 201,
-            "data": {
+        return success_response(
+            data={
                 "id": str(lost_item.id),
                 "title": lost_item.title,
                 "status": lost_item.status
             },
-            "message": "신고 완료",
-            "timestamp": datetime.now().isoformat()
-        }, status=status.HTTP_201_CREATED)
+            message="신고 완료",
+            code=201
+        )
 
     except Exception as e:
-        return Response({
-            "status": "error",
-            "code": 500,
-            "error": "분실물 신고 등록 중 오류가 발생했습니다.",
-            "timestamp": datetime.now().isoformat()
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return error_response(
+            error="분실물 신고 등록 중 오류가 발생했습니다.",
+            code=500
+        )
