@@ -9,4 +9,5 @@ urlpatterns = [
     path('<uuid:id>', views.lost_item_detail, name='lost_item_detail'),
     path('<uuid:id>/edit', views.update_lost_item, name='update_lost_item'),
     path('<uuid:id>/delete', views.delete_lost_item, name='delete_lost_item'),
+    path('<uuid:id>/status', views.update_lost_item_status, name='update_status'),
 ]
