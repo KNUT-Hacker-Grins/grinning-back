@@ -11,7 +11,10 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             name=name
         )
-        user.set_unusable_password()
+        if password:
+            user.set_password(password)    # ← 비밀번호 해시로 저장!
+        else:
+            user.set_unusable_password()
         user.save(using=self._db)
         return user
 
@@ -19,13 +22,14 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             social_id=social_id,
             email=email,
-            name=name
+            name=name,
+            password=password     # ← 반드시 password도 넘겨줘야 함!
         )
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
-
+#
 class User(AbstractBaseUser, PermissionsMixin):
     social_id = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
