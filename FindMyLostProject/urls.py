@@ -22,7 +22,7 @@ Including another URLconf
 
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from found_items.views import LostItemViewSet
+from found_items.views import FoundItemViewSet
 
 """
 REST API 엔드포인트(리소스)는 관습적으로 슬래시로 끝남
@@ -37,7 +37,7 @@ Django REST framework의 ViewSet/Router를 쓰면 무조건 슬래시 있는 엔
 
 """
 router = DefaultRouter()
-router.register(r'api/found-items', LostItemViewSet, basename='lostitem')
+router.register(r'api/found-items', FoundItemViewSet, basename='lostitem')
 
 urlpatterns = []
 urlpatterns += router.urls

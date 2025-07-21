@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import LostItem
+from .models import FoundItem
 
-class LostItemSerializer(serializers.ModelSerializer):
+class FoundItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LostItem
+        model = FoundItem
         fields = [
             'id',
             'user',
