@@ -47,3 +47,25 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
             'updated_at'
         ]
         read_only_fields = ['id', 'status', 'user_name', 'created_at', 'updated_at']
+
+class LostItemUpdateSerializer(serializers.ModelSerializer):
+    """분실물 신고 수정용 시리얼라이저"""
+
+    class Meta:
+        model = LostItem
+        fields = [
+            'title',
+            'description',
+            'lost_at',
+            'lost_location',
+            'image_urls',
+            'category',
+            'reward'
+        ]
+
+    def update(self, instance, validated_data):
+        """분실물 정보 업데이트"""
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
