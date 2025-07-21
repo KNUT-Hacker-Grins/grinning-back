@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "accounts",
-    "lost_items"
+    "found_items"
 ]
 
 MIDDLEWARE = [
