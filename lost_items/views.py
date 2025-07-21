@@ -28,6 +28,7 @@ def create_lost_item(request):
             "timestamp": datetime.now().isoformat()
         }, status=status.HTTP_400_BAD_REQUEST)
 
+
     try:
         # 2. 분실물 신고 생성 (user 자동 설정)
         lost_item = serializer.save(user=request.user)
