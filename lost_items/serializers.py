@@ -69,3 +69,18 @@ class LostItemUpdateSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+
+
+class LostItemStatusSerializer(serializers.ModelSerializer):
+    """분실물 상태 변경용 시리얼라이저"""
+
+    class Meta:
+        model = LostItem
+        fields = ['status']
+
+    def validate_status(self, value):
+        """상태 값 검증"""
+        allowed_statuses = ['searching', 'found', 'cancelled']
+        if value not in allowed_statuses:
+            raise serializers.ValidationError(f"상태는 {allowed_statuses} 중 하나여야 합니다.")
+        return value

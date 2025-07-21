@@ -7,11 +7,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import LostItem
-from .serializers import LostItemCreateSerializer, LostItemResponseSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
-from .serializers import LostItemCreateSerializer, LostItemResponseSerializer, LostItemUpdateSerializer
-
+from .serializers import (
+    LostItemCreateSerializer,
+    LostItemResponseSerializer,
+    LostItemUpdateSerializer,
+    LostItemStatusSerializer
+)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -261,5 +264,70 @@ def delete_lost_item(request, id):
             "status": "error",
             "code": 500,
             "error": "분실물 삭제 중 오류가 발생했습니다.",
+            "timestamp": datetime.now().isoformat()
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_lost_item_status(request, id):
+    """
+    분실물 상태 변경 API
+    PATCH /api/lost-items/{id}/status
+    """
+
+    try:
+        # 1. 분실물 조회
+        lost_item = get_object_or_404(LostItem, id=id)
+
+        # 2. 권한 확인 (본인 게시글만 상태 변경 가능)
+        if lost_item.user != request.user:
+            return Response({
+                "status": "error",
+                "code": 403,
+                "error": "본인이 작성한 분실물만 상태 변경할 수 있습니다.",
+                "timestamp": datetime.now().isoformat()
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        # 3. 요청 데이터 검증
+        serializer = LostItemStatusSerializer(lost_item, data=request.data, partial=True)
+
+        if not serializer.is_valid():
+            return Response({
+                "status": "error",
+                "code": 400,
+                "error": "입력 데이터가 올바르지 않습니다.",
+                "details": serializer.errors,
+                "timestamp": datetime.now().isoformat()
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # 4. 상태 변경
+        updated_lost_item = serializer.save()
+
+        # 5. API 명세서에 맞는 응답
+        return Response({
+            "status": "success",
+            "code": 200,
+            "data": {
+                "id": str(updated_lost_item.id),
+                "status": updated_lost_item.status
+            },
+            "message": "상태 변경 완료",
+            "timestamp": datetime.now().isoformat()
+        }, status=status.HTTP_200_OK)
+
+    except LostItem.DoesNotExist:
+        return Response({
+            "status": "error",
+            "code": 404,
+            "error": "해당 분실물을 찾을 수 없습니다.",
+            "timestamp": datetime.now().isoformat()
+        }, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "code": 500,
+            "error": "분실물 상태 변경 중 오류가 발생했습니다.",
             "timestamp": datetime.now().isoformat()
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
