@@ -5,7 +5,7 @@ class LostItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = LostItem
         fields = [
-            'lost_item_id',
+            'id',
             'user',
             'title',
             'description',
@@ -15,4 +15,4 @@ class LostItemSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['lost_item_id', 'created_at', 'updated_at', 'user']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user']

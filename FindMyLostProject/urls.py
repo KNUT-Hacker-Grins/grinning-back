@@ -21,8 +21,23 @@ Including another URLconf
 # ]
 
 from django.urls import path
-from lost_items.views import LostItemCreateView
+from rest_framework.routers import DefaultRouter
+from found_items.views import LostItemViewSet
 
-urlpatterns = [
-    path('api/lost-items', LostItemCreateView.as_view(), name='lostitem-create'),
-]
+"""
+REST API 엔드포인트(리소스)는 관습적으로 슬래시로 끝남
+
+예: /api/items/, /api/users/
+
+router.register('api/items', ItemViewSet)
+이 경우 실제 등록되는 URL은 /api/items/ (마지막에 슬래시!)
+
+즉, POST /api/items/ ← 이게 정상 경로
+Django REST framework의 ViewSet/Router를 쓰면 무조건 슬래시 있는 엔드포인트만 자동 생성됨
+
+"""
+router = DefaultRouter()
+router.register(r'api/found-items', LostItemViewSet, basename='lostitem')
+
+urlpatterns = []
+urlpatterns += router.urls
