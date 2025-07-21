@@ -1,12 +1,10 @@
 # lost_items/views/list.py
-from datetime import datetime
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
 from ..models import LostItem
 from ..serializers import LostItemResponseSerializer
+from ..utils.responses import success_response
 
 
 @api_view(['GET'])
@@ -37,16 +35,13 @@ def my_lost_items(request):
     # 5. 시리얼라이저로 변환
     serializer = LostItemResponseSerializer(page_obj, many=True)
 
-    # 6. API 명세서에 맞는 응답
-    return Response({
-        "status": "success",
-        "code": 200,
-        "data": {
+    # 6. 성공 응답
+    return success_response(
+        data={
             "items": serializer.data,
             "page": page,
             "limit": limit,
             "total": paginator.count
         },
-        "message": "조회 성공",
-        "timestamp": datetime.now().isoformat()
-    }, status=status.HTTP_200_OK)
+        message="조회 성공"
+    )
