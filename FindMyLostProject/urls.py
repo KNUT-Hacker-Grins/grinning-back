@@ -22,7 +22,7 @@ Including another URLconf
 
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from lost_items.views import LostItemViewSet
+from found_items.views import LostItemViewSet
 
 """
 REST API 엔드포인트(리소스)는 관습적으로 슬래시로 끝남
