@@ -1,5 +1,20 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Django migrations and DB
 /**/__pycache__
 /**/**/__pycache__
 /**/migrations
-
 db.sqlite3
+
+# IDE/Editor files
+.idea/
+*.iml
+
+# OS-specific
+.DS_Store
+
+# Environment
+.env
