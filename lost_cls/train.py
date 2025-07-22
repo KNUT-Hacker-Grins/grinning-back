@@ -11,19 +11,33 @@ LR = 0.001
 DATA_DIR = './data'
 NUM_CLASSES = len(os.listdir(os.path.join(DATA_DIR, 'train')))
 
+"""
+증강은 데이터가 적거나 편향되어 있을 때, "더 다양하고 일반화된 상황"을 가짜로 만들어서 모델이 더 똑똑해지도록 하는 과정입니다.
+데이터가 부족할 때, 데이터가 편향되어 있을 때, 모델이 특정 특징에만 집착할 때
+
+"""
 # 2. 데이터 전처리 및 DataLoader
 train_transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.RandomHorizontalFlip(),
-    transforms.RandomRotation(10),
-    transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+    transforms.RandomResizedCrop(224, scale=(0.8, 1.0)),   # 무작위 자르기 + 리사이즈
+    transforms.RandomHorizontalFlip(),                     # 좌우 반전
+    transforms.RandomRotation(degrees=15),                 # ±15도 회전
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),  # 색상 왜곡
+    transforms.RandomAffine(
+        degrees=10,
+        translate=(0.1, 0.1),
+        scale=(0.9, 1.1)
+    ),                                                     # 이동/스케일 조정
+    transforms.ToTensor(),                                 # Tensor 변환
+    transforms.Normalize([0.485, 0.456, 0.406],             # 정규화 (ImageNet 기준)
+                         [0.229, 0.224, 0.225]),
+    transforms.RandomErasing(p=0.2)                         # 무작위 패치 제거
 ])
 val_transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-])
+    transforms.Resize((224, 224)),                          # 고정 크기
+    transforms.ToTensor(),                                  # Tensor 변환
+    transforms.Normalize([0.485, 0.456, 0.406],             # 정규화
+                         [0.229, 0.224, 0.225])
+])  
 
 train_data = datasets.ImageFolder(os.path.join(DATA_DIR, 'train'), transform=train_transform)
 val_data = datasets.ImageFolder(os.path.join(DATA_DIR, 'val'), transform=val_transform)

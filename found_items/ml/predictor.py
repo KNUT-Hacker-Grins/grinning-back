@@ -2,8 +2,11 @@ import os
 import torch
 from .image_utils import download_image
 from .model_loader import ModelSingleton
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = str(Path(__file__).resolve().parent.parent.parent)
+
+MODEL_PATH = os.path.join(BASE_DIR, 'lost_cls', 'resnet18_lostitem.pth')
 DATA_DIR = os.path.join(BASE_DIR, 'lost_cls', 'data', 'train')
 CLASS_NAMES = sorted(os.listdir(DATA_DIR))
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -16,6 +19,7 @@ def predict_image(image_url):
         with torch.no_grad():
             output = model(img_t)
             prob = torch.nn.functional.softmax(output, dim=1)
+            print(prob)
             pred_idx = prob.argmax().item()
             pred_label = CLASS_NAMES[pred_idx]
             confidence = prob[0, pred_idx].item()

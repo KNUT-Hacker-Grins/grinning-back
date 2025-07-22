@@ -30,10 +30,10 @@ class FoundItemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # category = self.request.query_params.get('category')
+        category = self.request.query_params.get('category')
         location = self.request.query_params.get('location')
-        # if category:
-        #     queryset = queryset.filter(category=category)
+        if category:
+            queryset = queryset.filter(category=category)
         if location:
             queryset = queryset.filter(location=location)
         return queryset
