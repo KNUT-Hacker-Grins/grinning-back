@@ -4,11 +4,16 @@ from rest_framework.permissions import AllowAny
 from .models import FoundItem
 from .serializers import FoundItemSerializer
 from accounts.models import User
+from django.shortcuts import get_object_or_404
+from .models import FoundItem
+from .serializers import FoundItemSerializer, FoundItemDetailSerializer
+from accounts.models import User
 
 class FoundItemViewSet(viewsets.ModelViewSet):
-    queryset = FoundItem.objects.all().order_by('-id')   # 모델 PK명 정확히!
+    queryset = FoundItem.objects.all().order_by('-id')
     serializer_class = FoundItemSerializer
     permission_classes = [AllowAny]
+    lookup_field = 'id'  
 
     def perform_create(self, serializer):
         user = User.objects.first()  # MVP용 임시
@@ -31,11 +36,11 @@ class FoundItemViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         category = self.request.query_params.get('category')
-        location = self.request.query_params.get('location')
+        found_location = self.request.query_params.get('found_location')
         if category:
             queryset = queryset.filter(category=category)
-        if location:
-            queryset = queryset.filter(location=location)
+        if found_location:
+            queryset = queryset.filter(found_location=found_location)
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -61,3 +66,19 @@ class FoundItemViewSet(viewsets.ModelViewSet):
             },
             "message": "조회 성공"
         }, status=status.HTTP_200_OK)
+    
+    def retrieve(self, request, id=None):
+        found_item = get_object_or_404(self.get_queryset(), id=id)
+        serializer = self.get_serializer(found_item)
+        return Response({
+            "status": "success",
+            "code": 200,
+            "data": serializer.data,
+            "message": "조회 성공"
+        }, status=status.HTTP_200_OK)
+
+    def get_serializer_class(self):
+        # 상세 조회만 detail serializer 사용
+        if self.action == 'retrieve':
+            return FoundItemDetailSerializer
+        return self.serializer_class

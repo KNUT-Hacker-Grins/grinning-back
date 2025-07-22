@@ -23,9 +23,10 @@ if __name__ == "__main__":
 
 """
 
-python manage.py startapp lost_items
-python manage.py makemigrations lost_items
+python manage.py startapp found_items
+python manage.py makemigrations found_items
 python manage.py migrate
+python manage.py createsuperuser
 python manage.py runserver
 
 """
