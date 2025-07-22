@@ -1,5 +1,23 @@
+# Python cache
+__pycache__/
 /**/__pycache__
 /**/**/__pycache__
-/**/migrations
+*.pyc
+*.pyo
 
+# Django migrations and DB
+/**/migrations
 db.sqlite3
+
+# IDE/Editor files
+.idea/
+*.iml
+
+# OS-specific
+.DS_Store
+
+# Environment
+.env
+
+# train, val dataset
+lost_cls/data
