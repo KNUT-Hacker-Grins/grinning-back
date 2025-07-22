@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     "uploads",
     "found_items",
     "lost_items",
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +92,15 @@ KAKAO_CLIENT_SECRET = 'your_kakao_client_secret'
 
 GOOGLE_CLIENT_ID = 'your_google_client_id'
 GOOGLE_CLIENT_SECRET = 'your_google_client_secret'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
 
 # Database
@@ -147,6 +158,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+# Django 기본 설정
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+# OAuth 설정
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')
+GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
+KAKAO_CLIENT_ID = config('KAKAO_CLIENT_ID', default='')
+KAKAO_CLIENT_SECRET = config('KAKAO_CLIENT_SECRET', default='')
 
 # 미디어 파일 설정 (이미지, 파일 업로드용)
 MEDIA_URL = '/media/'  # 브라우저에서 접근할 URL 경로
