@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from ..models import User
 from ..serializers import LoginRequestSerializer, LoginResponseSerializer
 from ..utils import KakaoOAuth, GoogleOAuth
-from lost_items.utils.responses import success_response, error_response
+from FindMyLostProject.utils.responses import success_response, error_response
 
 User = get_user_model()
 
