@@ -15,6 +15,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/upload/', include('uploads.urls')),
     path('api/lost-items/', include('lost_items.urls')),
+    path('api/', include('accounts.urls')),
 ]
 
 # DRF router 기반 url 추가
