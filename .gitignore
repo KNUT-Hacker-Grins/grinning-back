@@ -1,11 +1,11 @@
 # Python cache
 __pycache__/
+/**/__pycache__
+/**/**/__pycache__
 *.pyc
 *.pyo
 
 # Django migrations and DB
-/**/__pycache__
-/**/**/__pycache__
 /**/migrations
 db.sqlite3
 
@@ -18,3 +18,6 @@ db.sqlite3
 
 # Environment
 .env
+
+# train, val dataset
+lost_cls/data

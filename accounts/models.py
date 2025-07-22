@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
-#
+
 class User(AbstractBaseUser, PermissionsMixin):
     social_id = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
