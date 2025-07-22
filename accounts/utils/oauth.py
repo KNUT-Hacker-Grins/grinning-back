@@ -58,6 +58,7 @@ class GoogleOAuth:
             'client_id': settings.GOOGLE_CLIENT_ID,
             'client_secret': settings.GOOGLE_CLIENT_SECRET,
             'code': auth_code,
+            'redirect_uri': 'http://localhost:3000/auth/google/callback',
         }
 
         token_response = requests.post(token_url, data=token_data)
