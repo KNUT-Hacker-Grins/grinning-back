@@ -21,12 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure--igu7e#&7#f@%p9$s*@k3y-s437a8-35%k0wi51n3)intlwe#k"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ["*"]
 
 # 우리 프로젝트에서 사용할 User 모델은 accounts 앱에 있는 User 클래스야!
@@ -86,12 +80,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
-
-KAKAO_CLIENT_ID = 'your_kakao_client_id'
-KAKAO_CLIENT_SECRET = 'your_kakao_client_secret'
-
-GOOGLE_CLIENT_ID = 'your_google_client_id'
-GOOGLE_CLIENT_SECRET = 'your_google_client_secret'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
