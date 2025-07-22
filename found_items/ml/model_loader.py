@@ -2,8 +2,10 @@ import os
 import torch
 import threading
 from torchvision import models, transforms
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = str(Path(__file__).resolve().parent.parent.parent)
+
 MODEL_PATH = os.path.join(BASE_DIR, 'lost_cls', 'resnet18_lostitem.pth')
 DATA_DIR = os.path.join(BASE_DIR, 'lost_cls', 'data', 'train')
 CLASS_NAMES = sorted(os.listdir(DATA_DIR))
@@ -32,12 +34,12 @@ class ModelSingleton:
             return cls._model
             
     @classmethod
-    def get_transform():
-        global _transform
-        if _transform is None:
-            _transform = transforms.Compose([
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    def get_transform(cls):
+        if cls._transform is None:
+            cls._transform = transforms.Compose([
+                transforms.Resize((224, 224)),               # 크기만 고정
+                transforms.ToTensor(),                       # Tensor 변환
+                transforms.Normalize([0.485, 0.456, 0.406],  # 정규화
+                                    [0.229, 0.224, 0.225])
             ])
-        return _transform
+        return cls._transform
