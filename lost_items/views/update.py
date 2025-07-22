@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from ..models import LostItem
 from ..serializers import LostItemUpdateSerializer
-from ..utils.responses import success_response, error_response
+from FindMyLostProject.utils.responses import success_response, error_response
 
 
 @api_view(['PUT'])
