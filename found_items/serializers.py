@@ -19,6 +19,13 @@ class FoundItemSerializer(serializers.ModelSerializer):
         category = predict_image(image_url)
         validated_data['category'] = category if category else 'unknown'
         return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        image_url = validated_data.get('image_url', instance.image_url)  # 수정된 값 or 기존값
+        if image_url != instance.image_url:
+            category = predict_image(image_url)
+            validated_data['category'] = category if category else 'unknown'
+        return super().update(instance, validated_data)
 
 class FoundItemDetailSerializer(serializers.ModelSerializer):
     user = OwnerSerializer()
