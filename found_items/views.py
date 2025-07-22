@@ -1,13 +1,13 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from .models import LostItem
-from .serializers import LostItemSerializer
+from .models import FoundItem
+from .serializers import FoundItemSerializer
 from accounts.models import User
 
-class LostItemViewSet(viewsets.ModelViewSet):
-    queryset = LostItem.objects.all().order_by('-id')   # 모델 PK명 정확히!
-    serializer_class = LostItemSerializer
+class FoundItemViewSet(viewsets.ModelViewSet):
+    queryset = FoundItem.objects.all().order_by('-id')   # 모델 PK명 정확히!
+    serializer_class = FoundItemSerializer
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
