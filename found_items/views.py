@@ -51,16 +51,24 @@ class FoundItemViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
+    
+        if not request.user.is_staff:
+            queryset = queryset.filter(status='available')
+        
         try:
             page = int(request.query_params.get('page', 1))
             limit = int(request.query_params.get('limit', 10))
+
         except ValueError:
             page, limit = 1, 10
+    
         total = queryset.count()
         start = (page - 1) * limit
         end = start + limit
         items = queryset[start:end]
+    
         serializer = self.get_serializer(items, many=True)
+
         return Response({
             "status": "success",
             "code": 200,
