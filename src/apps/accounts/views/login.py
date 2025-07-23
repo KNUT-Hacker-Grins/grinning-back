@@ -1,3 +1,4 @@
+# src/apps/lost_items/views/social_login.py (예시)
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -60,13 +61,19 @@ def social_login(request):
             user.name = user_info['name']
             user.save()
 
-        # 5. JWT 토큰 생성
+        # 5. JWT 토큰 생성 (refresh, access 모두)
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
+        refresh_token = str(refresh)
+
+        # ✅ 5-1. 토큰 콘솔 출력
+        print(f"[소셜 로그인] access_token: {access_token}")
+        print(f"[소셜 로그인] refresh_token: {refresh_token}")
 
         # 6. 응답 데이터 구성
         response_data = {
             'access_token': access_token,
+            'refresh_token': refresh_token,
             'user': user
         }
 
@@ -77,6 +84,7 @@ def social_login(request):
         )
 
     except Exception as e:
+        print(f"[소셜 로그인] 오류: {str(e)}")
         return error_response(
             error=f"소셜 로그인 중 오류가 발생했습니다: {str(e)}",
             code=500
