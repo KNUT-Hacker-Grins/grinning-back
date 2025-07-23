@@ -23,7 +23,7 @@ class FoundItemViewSet(viewsets.ModelViewSet):
     perform_create()는 POST 요청으로 새로운 객체를 생성할 때, 
     Django REST Framework가 자동으로 호출하는 훅(hook) 메서드입니다.
     """
-    def perform_create(self, serializer):
+    def perform_create(self, serializer): #################################
         user = User.objects.first()  
         serializer.save(user=user)
 
@@ -99,9 +99,9 @@ class FoundItemViewSet(viewsets.ModelViewSet):
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        request.user = User.objects.first() 
+        request.user = User.objects.first() #################################
 
-        if instance.user != request.user:
+        if not request.user.is_staff and instance.user != request.user:
             raise PermissionDenied("본인 게시글만 수정할 수 있습니다.")
 
         # partial=False → PUT 전체 수정
@@ -124,11 +124,11 @@ class FoundItemViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         # 임시 인증 로직: 개발 중이라면 강제로 로그인 유저 지정
         instance = self.get_object()
-        request.user = User.objects.first() 
+        request.user = User.objects.first() #################################
 
         # 본인 게시글만 삭제 가능
-        if instance.user != request.user:
-            raise PermissionDenied("본인 게시글만 삭제할 수 있습니다.")
+        if not request.user.is_staff and instance.user != request.user:
+            raise PermissionDenied("본인 게시글만 수정할 수 있습니다.")
 
         self.perform_destroy(instance)
 
@@ -139,10 +139,11 @@ class FoundItemViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_200_OK)
     
     """이 데코레이터는 DRF ViewSet에 새로운 커스텀 API 엔드포인트를 만들기 위해 꼭 필요합니다."""
+    # 상태값만 변경하기 
     @action(detail=True, methods=['patch'], url_path='status')
     def change_status(self, request, id=None):
         instance = self.get_object()
-        request.user = User.objects.first() 
+        request.user = User.objects.first() #################################
         new_status = request.data.get('status')
 
         # 상태 값 유효성 검사
