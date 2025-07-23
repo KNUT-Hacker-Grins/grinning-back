@@ -1,29 +1,35 @@
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 from ..models import LostItem
-from ..serializers import LostItemResponseSerializer
+from ..serializers.response import LostItemResponseSerializer
+from apps.lost_items.utils.permissions import IsAdminUser
 from apps.lost_items.utils.responses import success_response
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def my_lost_items(request):
-    """내 분실물 목록 조회 API"""
+@permission_classes([IsAdminUser])
+def admin_lost_items_list(request):
+    """관리자 분실물 신고 일괄 조회 API"""
 
     # 1. 쿼리 파라미터 처리
     page = int(request.GET.get('page', 1))
-    limit = int(request.GET.get('limit', 10))
+    limit = int(request.GET.get('limit', 20))
     status_filter = request.GET.get('status', None)
+    reported = request.GET.get('reported', None)
 
-    # 2. 내 분실물만 필터링
-    queryset = LostItem.objects.filter(user=request.user).order_by('-created_at')
+    # 2. 모든 LostItem 조회
+    queryset = LostItem.objects.all().order_by('-created_at')
 
-    # 3. 상태별 필터링 (선택사항)
-    if status_filter:
+    # 3. 상태별 필터링
+    if status_filter and status_filter != 'all':
         queryset = queryset.filter(status=status_filter)
 
-    # 4. 페이징 처리
+    # 4. 신고된 글 필터링 (reported=true일 때만)
+    if reported == 'true':
+        # TODO: Report 모델과 연결 필요
+        pass
+
+    # 5. 페이징 처리
     paginator = Paginator(queryset, limit)
 
     if page > paginator.num_pages:
@@ -31,10 +37,10 @@ def my_lost_items(request):
 
     page_obj = paginator.get_page(page)
 
-    # 5. 시리얼라이저로 변환
+    # 6. 시리얼라이저로 변환
     serializer = LostItemResponseSerializer(page_obj, many=True)
 
-    # 6. 성공 응답
+    # 7. 성공 응답
     return success_response(
         data={
             "items": serializer.data,
@@ -42,5 +48,6 @@ def my_lost_items(request):
             "limit": limit,
             "total": paginator.count
         },
-        message="조회 성공"
+        message="조회 성공",
+        code=201
     )
