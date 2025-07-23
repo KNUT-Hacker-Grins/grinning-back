@@ -1,4 +1,3 @@
-# lost_items/models.py
 import uuid
 from django.db import models
 from django.conf import settings
@@ -7,13 +6,6 @@ from django.core.validators import MinValueValidator
 
 class LostItem(models.Model):
     """잃어버린 물건 신고 모델"""
-
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False
-    )  # 고유 ID
-
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE

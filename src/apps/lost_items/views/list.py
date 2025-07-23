@@ -1,10 +1,9 @@
-# lost_items/views/list.py
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from ..models import LostItem
 from ..serializers import LostItemResponseSerializer
-from core.utils.responses import success_response
+from apps.lost_items.utils.responses import success_response
 
 
 @api_view(['GET'])
