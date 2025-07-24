@@ -24,10 +24,9 @@ class StartChatView(APIView):
         # 2. 이미 해당 post에 대해 생성된 채팅방 있는지 확인
         existing = ChatRoom.objects.filter(
             post_type=post_type,
-            post_id=post_id,
-            participants=request.user
-        ).filter(participants=post.user).first()
-
+            post_id=post_id
+        ).first()
+    
         if existing:
             serializer = ChatRoomSerializer(existing)
             return Response({
