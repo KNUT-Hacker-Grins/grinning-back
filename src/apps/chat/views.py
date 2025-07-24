@@ -24,10 +24,9 @@ class StartChatView(APIView):
         # 2. 이미 해당 post에 대해 생성된 채팅방 있는지 확인
         existing = ChatRoom.objects.filter(
             post_type=post_type,
-            post_id=post_id,
-            participants=request.user
-        ).filter(participants=post.user).first()
-
+            post_id=post_id
+        ).first()
+    
         if existing:
             serializer = ChatRoomSerializer(existing)
             return Response({
@@ -43,6 +42,9 @@ class StartChatView(APIView):
         # 3. 새 채팅방 생성
         room = ChatRoom.objects.create(post_type=post_type, post_id=post_id)
         room.participants.add(request.user, post.user)
+        print("request.user.id:", request.user.id)
+        print("post.user.id:", post.user.id)
+
         room.save()
 
         serializer = ChatRoomSerializer(room)
