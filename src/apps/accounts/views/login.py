@@ -2,13 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
-from ..models import User
-from ..serializers import LoginRequestSerializer, LoginResponseSerializer
 from ..utils import KakaoOAuth, GoogleOAuth
-from core.utils.responses import success_response, error_response
+from apps.lost_items.utils.responses import success_response, error_response
+from ..serializers import LoginRequestSerializer, LoginResponseSerializer
 
 User = get_user_model()
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -20,7 +18,6 @@ def social_login(request):
 
     # 1. 요청 데이터 검증
     serializer = LoginRequestSerializer(data=request.data)
-
     if not serializer.is_valid():
         return error_response(
             error="입력 데이터가 올바르지 않습니다.",
@@ -60,7 +57,7 @@ def social_login(request):
             user.name = user_info['name']
             user.save()
 
-        # 5. JWT 토큰 생성
+        # 5. JWT 토큰 생성 (access만 반환)
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
 
@@ -77,6 +74,7 @@ def social_login(request):
         )
 
     except Exception as e:
+        print(f"[소셜 로그인] 오류: {str(e)}")
         return error_response(
             error=f"소셜 로그인 중 오류가 발생했습니다: {str(e)}",
             code=500
