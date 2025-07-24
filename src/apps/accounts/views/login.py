@@ -1,15 +1,12 @@
-# src/apps/lost_items/views/social_login.py (예시)
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
-from ..models import User
-from ..serializers import LoginRequestSerializer, LoginResponseSerializer
 from ..utils import KakaoOAuth, GoogleOAuth
 from apps.lost_items.utils.responses import success_response, error_response
+from ..serializers import LoginRequestSerializer, LoginResponseSerializer
 
 User = get_user_model()
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -21,7 +18,6 @@ def social_login(request):
 
     # 1. 요청 데이터 검증
     serializer = LoginRequestSerializer(data=request.data)
-
     if not serializer.is_valid():
         return error_response(
             error="입력 데이터가 올바르지 않습니다.",
@@ -61,19 +57,13 @@ def social_login(request):
             user.name = user_info['name']
             user.save()
 
-        # 5. JWT 토큰 생성 (refresh, access 모두)
+        # 5. JWT 토큰 생성 (access만 반환)
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
-        refresh_token = str(refresh)
-
-        # ✅ 5-1. 토큰 콘솔 출력
-        print(f"[소셜 로그인] access_token: {access_token}")
-        print(f"[소셜 로그인] refresh_token: {refresh_token}")
 
         # 6. 응답 데이터 구성
         response_data = {
             'access_token': access_token,
-            'refresh_token': refresh_token,
             'user': user
         }
 
