@@ -29,4 +29,8 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 
+from apps.accounts.models import User
+user_count = User.objects.count()
+print(user_count)
+
 """
