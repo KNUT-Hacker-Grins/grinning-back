@@ -60,10 +60,12 @@ def social_login(request):
         # 5. JWT 토큰 생성 (access만 반환)
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
+        refresh_token = str(refresh)
 
         # 6. 응답 데이터 구성
         response_data = {
             'access_token': access_token,
+            'refresh_token': refresh_token,
             'user': user
         }
 
