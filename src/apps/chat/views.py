@@ -42,9 +42,6 @@ class StartChatView(APIView):
         # 3. 새 채팅방 생성
         room = ChatRoom.objects.create(post_type=post_type, post_id=post_id)
         room.participants.add(request.user, post.user)
-        print("request.user.id:", request.user.id)
-        print("post.user.id:", post.user.id)
-
         room.save()
 
         serializer = ChatRoomSerializer(room)
