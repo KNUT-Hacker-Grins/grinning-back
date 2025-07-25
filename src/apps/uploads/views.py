@@ -12,6 +12,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
+# 디버깅을 위한 로깅 추가
+import logging
+logger = logging.getLogger(__name__)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -59,6 +63,7 @@ def upload_image(request):
         unique_filename = f"{uuid.uuid4()}{file_extension}"
 
         # 5. 파일 저장 (uploads/ 폴더에)
+        # default_storage.save()는 settings.py의 DEFAULT_FILE_STORAGE 설정에 따라 동작
         file_path = default_storage.save(f'uploads/{unique_filename}', image_file)
 
         # 6. 전체 URL 생성
@@ -77,10 +82,12 @@ def upload_image(request):
         }, status=status.HTTP_200_OK)
 
     except Exception as e:
-        # 8. 에러 처리
+        # 8. 에러 처리 및 디버깅 정보 추가
+        logger.exception("파일 업로드 중 예외 발생:") # 서버 로그에 상세 스택 트레이스 기록
+        error_detail = f"--- {type(e).__name__}: {str(e)} ---" # 에러 타입과 메시지
         return Response({
             "status": "error",
             "code": 500,
-            "error": "파일 업로드 중 오류가 발생했습니다.",
+            "error": f"파일 업로드 중 오류가 발생했습니다. {error_detail}", # 디버깅 정보 포함
             "timestamp": datetime.now().isoformat()
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
