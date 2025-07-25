@@ -98,15 +98,12 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mydb',
         'USER': 'root',
         'PASSWORD': '1111',
-        'HOST': 'localhost',   # 또는 DB가 설치된 IP
-        'PORT': '3306',        # MySQL 기본 포트
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

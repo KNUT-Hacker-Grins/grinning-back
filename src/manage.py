@@ -23,11 +23,11 @@ if __name__ == "__main__":
 
 """
 
-python manage.py startapp found_items
-python manage.py makemigrations found_items
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
+python src/manage.py startapp found_items
+python src/manage.py makemigrations 
+python src/manage.py migrate
+python src/manage.py createsuperuser
+python src/manage.py runserver
 
 from apps.accounts.models import User
 user_count = User.objects.count()
