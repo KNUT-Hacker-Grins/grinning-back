@@ -76,3 +76,22 @@ class UserProfileView(APIView):
                 error=f"프로필 수정 중 오류가 발생했습니다: {str(e)}",
                 code=500
             )
+
+    def delete(self, request):
+        """
+        내 계정 삭제 API
+        DELETE /api/users/me
+        """
+        user = request.user # 현재 로그인한 사용자
+
+        try:
+            user.delete()
+            return success_response(
+                message="계정 삭제 성공",
+                code=200
+            )
+        except Exception as e:
+            return error_response(
+                error=f"계정 삭제 중 오류가 발생했습니다: {str(e)}",
+                code=500
+            )
