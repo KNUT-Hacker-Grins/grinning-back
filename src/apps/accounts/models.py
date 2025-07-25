@@ -21,14 +21,17 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, social_id, email, name, provider='admin', password=None, phone_number=None): # phone_number 인자 추가
+    def create_superuser(self, email, name, password=None, phone_number=None):
+        social_id = email
+        provider = 'admin'
+
         user = self.create_user(
             social_id=social_id,
             email=email,
             name=name,
             provider=provider,
             password=password,
-            phone_number=phone_number # create_user에 phone_number 인자를 전달합니다.
+            phone_number=phone_number
         )
         user.is_staff = True
         user.is_superuser = True
@@ -46,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['social_id', 'name', 'provider'] # phone_number는 필수 필드가 아니므로 여기에 추가하지 않습니다.
+    REQUIRED_FIELDS = ['name']
 
     objects = UserManager()
 
