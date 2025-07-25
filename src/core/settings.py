@@ -156,8 +156,10 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # OAuth 설정
 GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')
 GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
+GOOGLE_REDIRECT_URI = config('GOOGLE_REDIRECT_URI', default='')
 KAKAO_CLIENT_ID = config('KAKAO_CLIENT_ID', default='')
 KAKAO_CLIENT_SECRET = config('KAKAO_CLIENT_SECRET', default='')
+KAKAO_REDIRECT_URI = config('KAKAO_REDIRECT_URI', default='')
 
 # 미디어 파일 설정 (이미지, 파일 업로드용)
 MEDIA_URL = '/media/'  # 브라우저에서 접근할 URL 경로
