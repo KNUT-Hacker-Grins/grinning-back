@@ -20,7 +20,11 @@ class FoundItem(models.Model):
     found_at = models.DateTimeField()
     found_location = models.CharField(max_length=200)
     image_url = models.URLField(max_length=500)
-    category = models.CharField(max_length=50)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
+    category = models.JSONField(default=dict)
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default='available'
+        )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

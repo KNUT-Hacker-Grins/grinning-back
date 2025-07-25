@@ -10,7 +10,7 @@ class UserManager(BaseUserManager):
             social_id=social_id,
             email=self.normalize_email(email),
             name=name,
-            provider=provider
+            provider=provider or ""
         )
         user.set_unusable_password()
         user.save(using=self._db)
@@ -32,7 +32,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     social_id = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=100)
-    provider = models.CharField(max_length=30, null=True, blank=True)
+
+    # ✅ PostgreSQL에 적합하도록 null 대신 빈 문자열을 기본값으로
+    provider = models.CharField(max_length=30, default="", blank=True)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
