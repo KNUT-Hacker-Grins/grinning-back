@@ -10,8 +10,12 @@ class UserManager(BaseUserManager):
             social_id=social_id,
             email=self.normalize_email(email),
             name=name,
+<<<<<<< HEAD
+            provider=provider or ""
+=======
             provider=provider,
             phone_number=phone_number # phone_number 필드 설정
+>>>>>>> origin/main
         )
         if password:
             user.set_password(password)
@@ -41,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     social_id = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True) # 전화번호 필드 추가
+    phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     provider = models.CharField(max_length=30, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status,  pagination
+from rest_framework import status, pagination
 from django.shortcuts import get_object_or_404
 from .models import ChatRoom
 from ..found_items.models import FoundItem
@@ -40,6 +40,16 @@ class StartChatView(APIView):
             })
 
         # 3. 새 채팅방 생성
+        if request.user == post.user:
+            return Response(
+                {
+                    "status": "fail",
+                    "code": 403,
+                    "message": "자신의 글에는 채팅을 시작할 수 없습니다."
+                },
+                status=403
+            )
+        
         room = ChatRoom.objects.create(post_type=post_type, post_id=post_id)
         room.participants.add(request.user, post.user)
         room.save()
@@ -56,24 +66,30 @@ class StartChatView(APIView):
         }, status=201)
 
 class ChatMessagePagination(pagination.PageNumberPagination):
+    page_size = 20  # 원하는 기본 페이지 크기
     page_size_query_param = 'limit'
 
 class ChatMessageList(APIView):
     def get(self, request, room_id):
         room = get_object_or_404(ChatRoom, id=room_id)
+
+        if request.user not in room.participants.all():
+            return Response({"detail": "접근 권한 없음"}, status=403)
+
         messages = ChatMessage.objects.filter(room=room).order_by('-timestamp')
         paginator = ChatMessagePagination()
         page = paginator.paginate_queryset(messages, request)
         serializer = ChatMessageSerializer(page, many=True)
+
         return paginator.get_paginated_response({
-            'status': 'success',
-            'code': 200,
-            'data': {
-                'messages': serializer.data,
-                'page': int(request.query_params.get('page', 1)),
-                'total': messages.count()
+            "status": "success",
+            "code": 200,
+            "data": {
+                "messages": serializer.data,
+                "page": paginator.page.number,
+                "total": paginator.page.paginator.count
             },
-            'message': '조회 성공'
+            "message": "조회 성공"
         })
 
 class ChatMessageCreate(APIView):
