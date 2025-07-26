@@ -18,8 +18,8 @@ class LostItem(models.Model):
     lost_location = models.CharField(max_length=200)  # 분실한 장소
 
     image_urls = models.JSONField(default=list)  # 이미지 URL 배열
-    category = models.CharField(max_length=50)  # 카테고리
-
+    category = models.JSONField(default=dict)
+    
     reward = models.DecimalField(
         max_digits=10,
         decimal_places=0,
