@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
 """
 
-python src/manage.py startapp found_items
+python src/manage.py startapp reports
 python src/manage.py makemigrations 
 python src/manage.py migrate
 python src/manage.py createsuperuser

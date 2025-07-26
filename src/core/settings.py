@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "apps.uploads",
     "apps.found_items",
     "apps.lost_items",
-    "apps.chat"
+    "apps.chat",
+    "apps.reports"
 ]
 
 MIDDLEWARE = [
