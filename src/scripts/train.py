@@ -1,14 +1,19 @@
 import os
 import torch
-from torchvision import datasets, transforms, models
+from pathlib import Path
 from torch import nn, optim
 from torch.utils.data import DataLoader
+from torchvision import datasets, transforms, models
 
 # 1. 하이퍼파라미터 세팅
+# 내 환경으로는 16이 가장 안정적! 
+# 에포크 수 변화 
+
 BATCH_SIZE = 16
 EPOCHS = 10
 LR = 0.001
-DATA_DIR = './data'
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = os.path.join(BASE_DIR, 'classifier', 'data')
 NUM_CLASSES = len(os.listdir(os.path.join(DATA_DIR, 'train')))
 
 """
@@ -17,25 +22,27 @@ NUM_CLASSES = len(os.listdir(os.path.join(DATA_DIR, 'train')))
 
 """
 # 2. 데이터 전처리 및 DataLoader
+# 기본 입력 이미지 사이즈는 224x224
 train_transform = transforms.Compose([
-    transforms.RandomResizedCrop(224, scale=(0.8, 1.0)),   # 무작위 자르기 + 리사이즈
-    transforms.RandomHorizontalFlip(),                     # 좌우 반전
-    transforms.RandomRotation(degrees=15),                 # ±15도 회전
-    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),  # 색상 왜곡
+    transforms.RandomResizedCrop(224, scale=(0.8, 1.0)),  
+    transforms.RandomHorizontalFlip(),                    
+    transforms.RandomRotation(degrees=15),                
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
     transforms.RandomAffine(
         degrees=10,
         translate=(0.1, 0.1),
         scale=(0.9, 1.1)
-    ),                                                     # 이동/스케일 조정
-    transforms.ToTensor(),                                 # Tensor 변환
-    transforms.Normalize([0.485, 0.456, 0.406],             # 정규화 (ImageNet 기준)
+    ),                                                 
+    transforms.ToTensor(),                                
+    transforms.Normalize([0.485, 0.456, 0.406],             
                          [0.229, 0.224, 0.225]),
-    transforms.RandomErasing(p=0.2)                         # 무작위 패치 제거
+    transforms.RandomErasing(p=0.2)                        
 ])
 val_transform = transforms.Compose([
-    transforms.Resize((224, 224)),                          # 고정 크기
-    transforms.ToTensor(),                                  # Tensor 변환
-    transforms.Normalize([0.485, 0.456, 0.406],             # 정규화
+    transforms.Resize(256),                                
+    transforms.CenterCrop(224),                            
+    transforms.ToTensor(),                                  
+    transforms.Normalize([0.485, 0.456, 0.406],            
                          [0.229, 0.224, 0.225])
 ])  
 
@@ -94,5 +101,5 @@ for epoch in range(EPOCHS):
     print(f"[Epoch {epoch+1}] Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
 
 # 5. 모델 저장
-torch.save(model.state_dict(), 'resnet18_lostitem.pth')
-print("모델 저장 완료: resnet18_lostitem.pth")
+torch.save(model.state_dict(), 'src/classifier/weights/resnet18_lostitem3.pth')
+print("모델 저장 완료: resnet18_lostitem3.pth")
