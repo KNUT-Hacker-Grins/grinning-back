@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/lost-items/', include('apps.lost_items.urls')),
     path('api/found-items/', include('apps.found_items.urls')), 
     path('api/chat/', include('apps.chat.urls')), 
+    path('api/', include('apps.reports.urls')),
     path('api/', include('apps.accounts.urls')),
 ]
 
