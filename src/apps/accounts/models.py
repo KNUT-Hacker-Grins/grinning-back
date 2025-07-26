@@ -10,12 +10,8 @@ class UserManager(BaseUserManager):
             social_id=social_id,
             email=self.normalize_email(email),
             name=name,
-<<<<<<< HEAD
-            provider=provider or ""
-=======
             provider=provider,
-            phone_number=phone_number # phone_number 필드 설정
->>>>>>> origin/main
+            phone_number=phone_number 
         )
         if password:
             user.set_password(password)
