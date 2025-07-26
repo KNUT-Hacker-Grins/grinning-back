@@ -1,7 +1,6 @@
-# accounts/models.py
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UserManager(BaseUserManager):
     def create_user(self, social_id, email, name, provider, password=None, phone_number=None): # phone_number 인자 추가
@@ -12,7 +11,7 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             name=name,
             provider=provider,
-            phone_number=phone_number # phone_number 필드 설정
+            phone_number=phone_number 
         )
         if password:
             user.set_password(password)
@@ -42,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     social_id = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True) # 전화번호 필드 추가
+    phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     provider = models.CharField(max_length=30, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

@@ -21,4 +21,4 @@ db.sqlite3
 *.env
 
 # train, val dataset
-lost_cls/data
+src/classifier/data/

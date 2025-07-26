@@ -30,7 +30,7 @@ class FoundItemListView(APIView):
         found_location = request.query_params.get('found_location')
 
         if category:
-            queryset = queryset.filter(category=category)
+            queryset = queryset.filter(category__label=category)
         if found_location:
             queryset = queryset.filter(found_location=found_location)
 
