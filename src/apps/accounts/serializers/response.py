@@ -25,11 +25,13 @@ class LoginResponseSerializer(serializers.Serializer):
     """로그인 응답용 시리얼라이저"""
 
     access_token = serializers.CharField()
+    refresh_token = serializers.CharField()
     user = UserResponseSerializer()
 
     def to_representation(self, instance):
         """로그인 응답 데이터 구성"""
         return {
             'access_token': instance['access_token'],
+            'refresh_token': instance['refresh_token'],
             'user': UserResponseSerializer(instance['user']).data
         }
