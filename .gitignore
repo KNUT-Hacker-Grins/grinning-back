@@ -22,3 +22,5 @@ db.sqlite3
 
 # train, val dataset
 src/classifier/data/
+
+venv/
