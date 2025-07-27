@@ -54,7 +54,7 @@ def google_callback(request):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        base_url = 'http://localhost:3000/auth/callback'
+        base_url = 'http://localhost:3000/login/callback'
         query_params = urlencode({'access': access_token, 'refresh': refresh_token})
         redirect_url = f'{base_url}?{query_params}'
 
@@ -74,7 +74,7 @@ def google_callback(request):
     except Exception as e:
         logger.exception(f"Google 로그인 실패: {e}") # 상세 에러 로깅
         error_message = urlencode({"message": "Google 로그인 중 오류가 발생했습니다. 다시 시도해주세요."})
-        error_redirect_url = f'http://localhost:8000/login?error={error_message}'
+        error_redirect_url = f'http://localhost:3000/login?error={error_message}'
         return redirect(error_redirect_url)
 
 
@@ -114,7 +114,7 @@ def kakao_callback(request):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        base_url = 'http://localhost:3000/auth/callback'
+        base_url = 'http://localhost:3000/login/callback'
         query_params = urlencode({'access': access_token, 'refresh': refresh_token})
         redirect_url = f'{base_url}?{query_params}'
 
