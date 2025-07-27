@@ -10,6 +10,7 @@ import logging # 로깅을 위해 추가
 from apps.lost_items.utils.responses import error_response
 from ..utils import GoogleOAuth, KakaoOAuth
 from ..serializers.response import LoginResponseSerializer
+from django.http import JsonResponse
 
 User = get_user_model()
 
@@ -59,10 +60,21 @@ def google_callback(request):
 
         return redirect(redirect_url)
 
+        # return JsonResponse({
+        #     "access": access_token,
+        #     "refresh": refresh_token,
+        #     "user": {
+        #         "id": user.social_id,
+        #         "email": user.email,
+        #         "name": user.name,
+        #         "provider": user_info["provider"]
+        #     }
+        # })
+
     except Exception as e:
         logger.exception(f"Google 로그인 실패: {e}") # 상세 에러 로깅
         error_message = urlencode({"message": "Google 로그인 중 오류가 발생했습니다. 다시 시도해주세요."})
-        error_redirect_url = f'http://localhost:3000/login?error={error_message}'
+        error_redirect_url = f'http://localhost:8000/login?error={error_message}'
         return redirect(error_redirect_url)
 
 

@@ -5,7 +5,7 @@ from torchvision import models, transforms
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = os.path.join(BASE_DIR, 'classifier', 'weights', 'resnet18_lostitem2.pth')
+MODEL_PATH = os.path.join(BASE_DIR, 'classifier', 'resnet18_lostitem.pth')
 CLASS_NAMES = sorted(["휴대폰", "이어폰", "노트북", "시계", "지갑", "백팩", "우산"])
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

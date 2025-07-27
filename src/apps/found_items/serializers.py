@@ -12,20 +12,20 @@ class FoundItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoundItem
         fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'image_url', 'category', 'status', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'category', 'status']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status']
 
-    def create(self, validated_data):
-        image_url = validated_data.get('image_url')
-        category = predict_image(image_url)
-        validated_data['category'] = category if category else 'unknown'
-        return super().create(validated_data)
+    # def create(self, validated_data):
+    #     image_url = validated_data.get('image_url')
+    #     category = predict_image(image_url)
+    #     validated_data['category'] = category if category else 'unknown'
+    #     return super().create(validated_data)
     
-    def update(self, instance, validated_data):
-        image_url = validated_data.get('image_url', instance.image_url)  # 수정된 값 or 기존값
-        if image_url != instance.image_url:
-            category = predict_image(image_url)
-            validated_data['category'] = category if category else 'unknown'
-        return super().update(instance, validated_data)
+    # def update(self, instance, validated_data):
+    #     image_url = validated_data.get('image_url', instance.image_url)  # 수정된 값 or 기존값
+    #     if image_url != instance.image_url:
+    #         category = predict_image(image_url)
+    #         validated_data['category'] = category if category else 'unknown'
+    #     return super().update(instance, validated_data)
 
 class FoundItemDetailSerializer(serializers.ModelSerializer):
     user = OwnerSerializer()
