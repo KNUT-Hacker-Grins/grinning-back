@@ -31,6 +31,7 @@ AUTH_USER_MODEL = 'accounts.User'
 INSTALLED_APPS = [
     'corsheaders',
     'django_extensions',
+    'storages',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "apps.lost_items",
     "apps.chat",
     'apps.reports',
+    'apps.classifier_api',
 ]
 
 MIDDLEWARE = [
@@ -162,9 +164,22 @@ KAKAO_CLIENT_ID = config('KAKAO_CLIENT_ID', default='')
 KAKAO_CLIENT_SECRET = config('KAKAO_CLIENT_SECRET', default='')
 KAKAO_REDIRECT_URI = config('KAKAO_REDIRECT_URI', default='')
 
-# 미디어 파일 설정 (이미지, 파일 업로드용)
-MEDIA_URL = '/media/'  # 브라우저에서 접근할 URL 경로
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 실제 파일이 저장될 폴더
+# AWS S3 설정
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='ap-northeast-2') # 예: 서울 리전
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+AWS_S3_FILE_OVERWRITE = False # 같은 이름의 파일이 있을 경우 덮어쓰지 않음
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATIC_URL = "static/"
+
+# S3에 미디어 파일 저장 설정
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/' # S3 버킷의 미디어 파일 URL
 
 # 업로드 파일 크기 제한 (5MB)
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
