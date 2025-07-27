@@ -12,3 +12,5 @@ torchvision
 djangorestframework-simplejwt
 python-decouple
 requests
+boto3
+django-storages
