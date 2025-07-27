@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, pagination
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from .models import ChatRoom
 from ..found_items.models import FoundItem
@@ -8,6 +10,7 @@ from ..lost_items.models import LostItem
 from .serializers import ChatRoomSerializer
 from .models import ChatRoom, ChatMessage
 from .serializers import ChatMessageSerializer
+
 
 class StartChatView(APIView):
     def post(self, request):
@@ -105,4 +108,42 @@ class ChatMessageCreate(APIView):
                 'message': '전송 완료'
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UnreadCountView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        rooms = ChatRoom.objects.filter(participants=user)
+
+        unread_by_room = {}
+        for room in rooms:
+            unread_count = ChatMessage.objects.filter(
+                room=room,
+                is_read=False
+            ).exclude(sender=user).count()  # 내가 보낸 건 제외해야 진짜 '수신 안읽음'
+            if unread_count > 0:
+                unread_by_room[str(room.id)] = unread_count
+
+        return Response(unread_by_room)
+
+class MarkAsReadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, room_id, *args, **kwargs):
+        user = request.user
+
+        try:
+            room = ChatRoom.objects.get(id=room_id, participants=user)
+        except ChatRoom.DoesNotExist:
+            return Response({'detail': '채팅방이 존재하지 않거나 권한이 없습니다.'}, status=404)
+
+        updated_count = ChatMessage.objects.filter(
+            room=room,
+            is_read=False
+        ).exclude(sender=user).update(is_read=True)
+
+        return Response({
+            'message': '읽음 처리 완료',
+            'updated': updated_count
+        })
