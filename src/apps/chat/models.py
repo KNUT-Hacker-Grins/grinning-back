@@ -25,4 +25,5 @@ class ChatMessage(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     message_type = models.CharField(max_length=10, default='text')  # 'text', 'image', 등
+    is_read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
