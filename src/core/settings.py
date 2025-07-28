@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-ALLOWED_HOSTS = [".render.com", "localhost", "127.0.0.1", "unit6-back-1.onrender.com"]
+ALLOWED_HOSTS = [".render.com", "localhost", "127.0.0.1", "unit6-back-1.onrender.com", "ec2-16-176-143-124.ap-southeast-2.compute.amazonaws.com", "unit6frontdx-2swg.vercel.app"]
 
 # 우리 프로젝트에서 사용할 User 모델은 accounts 앱에 있는 User 클래스야!
 AUTH_USER_MODEL = 'accounts.User'
@@ -153,7 +153,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://your-frontend-app.onrender.com", # Render 프론트엔드 도메인 추가
+    "https://unit6-back-1.onrender.com", # Render 프론트엔드 도메인 추가
+    "https://unit6frontdx-2swg.vercel.app",
 ]
 
 # Django 기본 설정
@@ -163,10 +164,10 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # OAuth 설정
 GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')
 GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
-GOOGLE_REDIRECT_URI = config('GOOGLE_REDIRECT_URI', default='')
+GOOGLE_REDIRECT_URI = config('GOOGLE_REDIRECT_URI', default='https://unit6frontdx-2swg.vercel.app/api/auth/google/callback')
 KAKAO_CLIENT_ID = config('KAKAO_CLIENT_ID', default='')
 KAKAO_CLIENT_SECRET = config('KAKAO_CLIENT_SECRET', default='')
-KAKAO_REDIRECT_URI = config('KAKAO_REDIRECT_URI', default='')
+KAKAO_REDIRECT_URI = config('KAKAO_REDIRECT_URI', default='https://unit6frontdx-2swg.vercel.app/api/auth/kakao/callback')
 
 # AWS S3 설정
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
