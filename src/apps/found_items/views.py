@@ -16,7 +16,10 @@ class FoundItemCreateView(APIView):
     def post(self, request):
         serializer = FoundItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
+        
+        # 비인증 사용자의 경우 None을 저장
+        user = request.user if request.user.is_authenticated else None
+        serializer.save(user=user)
 
         return Response({
             "status": "success",
@@ -84,7 +87,8 @@ class FoundItemUpdateView(APIView):
     def put(self, request, id):
         item = get_object_or_404(FoundItem, id=id)
 
-        if item.user != request.user:
+        # 비인증 사용자이거나 게시글 작성자가 아닌 경우 권한 거부
+        if not request.user.is_authenticated or item.user != request.user:
             raise PermissionDenied("본인 게시글만 수정할 수 있습니다.")
 
         serializer = FoundItemSerializer(item, data=request.data)
@@ -105,7 +109,8 @@ class FoundItemDeleteView(APIView):
     def delete(self, request, id):
         item = get_object_or_404(FoundItem, id=id)
 
-        if item.user != request.user:
+        # 비인증 사용자이거나 게시글 작성자가 아닌 경우 권한 거부
+        if not request.user.is_authenticated or item.user != request.user:
             raise PermissionDenied("본인 게시글만 삭제할 수 있습니다.")
 
         item.delete()
@@ -132,7 +137,8 @@ class FoundItemStatusUpdateView(APIView):
                 "message": f"잘못된 상태입니다. 가능한 값: {valid_statuses}"
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        if item.user != request.user:
+        # 비인증 사용자이거나 게시글 작성자가 아닌 경우 권한 거부
+        if not request.user.is_authenticated or item.user != request.user:
             raise PermissionDenied("본인 게시글만 상태 변경할 수 있습니다.")
 
         item.status = new_status

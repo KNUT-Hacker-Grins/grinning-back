@@ -10,14 +10,21 @@ from apps.lost_items.utils.responses import success_response
 @permission_classes([AllowAny])
 def lost_items_list(request):
     """내 분실물 목록 조회 API"""
+    """분실물 목록 조회 API
+    """
 
     # 1. 쿼리 파라미터 처리
     page = int(request.GET.get('page', 1))
     limit = int(request.GET.get('limit', 10))
     status_filter = request.GET.get('status', None)
 
-    # 2. 내 분실물만 필터링
-    queryset = LostItem.objects.filter(user=request.user).order_by('-created_at')
+    # 2. 사용자 인증 상태에 따른 필터링
+    if request.user.is_authenticated:
+        # 인증된 사용자: 자신의 분실물만 반환
+        queryset = LostItem.objects.filter(user=request.user).order_by('-created_at')
+    else:
+        # 비인증 사용자: 모든 분실물 반환
+        queryset = LostItem.objects.all().order_by('-created_at')
 
     # 3. 상태별 필터링 (선택사항)
     if status_filter:
@@ -42,7 +49,7 @@ def lost_items_list(request):
             "limit": limit,
             "total": paginator.count
         },
-        message="조회 성공"
+        message="분실물 목록 조회 성공"
     )
 
 @api_view(['GET'])
