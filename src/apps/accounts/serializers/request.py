@@ -107,7 +107,7 @@ class LoginPasswordRequestSerializer(serializers.Serializer):
                 raise serializers.ValidationError("이메일 또는 비밀번호가 올바르지 않습니다.")
 
             # 소셜 로그인으로 가입된 사용자는 이메일/비밀번호 로그인 불가
-            if user.provider != 'email':  #type: ignore
+            if user.provider not in ['email', 'admin']:  #type: ignore
                 raise serializers.ValidationError("소셜 로그인으로 가입된 계정입니다. 소셜 로그인을 이용해주세요.")
 
             data['user'] = user # 유효한 사용자 객체를 데이터에 추가
