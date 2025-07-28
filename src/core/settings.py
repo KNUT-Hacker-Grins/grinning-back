@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "apps.chat",
     'apps.reports',
     'apps.classifier_api',
+    "apps.translation",
 ]
 
 MIDDLEWARE = [
