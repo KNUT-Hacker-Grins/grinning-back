@@ -102,8 +102,12 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mydb",         # 데이터베이스 이름
+        "USER": "root",         # PostgreSQL 사용자
+        "PASSWORD": "1111",    # 비밀번호
+        "HOST": "localhost",            # 또는 IP 주소
+        "PORT": "5432",                 # PostgreSQL 기본 포트
     }
 }
 
