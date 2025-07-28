@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/chat/', include('apps.chat.urls')), 
     path('api/', include('apps.reports.urls')),
     path('api/classify/', include('apps.classifier_api.urls')),
+    path('api/translation/', include('apps.translation.urls')),
     path('api/', include('apps.accounts.urls')),
 ]
 
