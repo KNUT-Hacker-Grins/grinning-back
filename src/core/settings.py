@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-ALLOWED_HOSTS = [".render.com", "localhost", "127.0.0.1", "unit6-back-1.onrender.com", "ec2-16-176-143-124.ap-southeast-2.compute.amazonaws.com", "unit6frontdx-2swg.vercel.app"]
+ALLOWED_HOSTS = [".render.com", "localhost", "127.0.0.1", "unit6-back-1.onrender.com", "ec2-16-176-143-124.ap-southeast-2.compute.amazonaws.com", "unit6frontdx-2swg.vercel.app", "unit6-front.vercel.app"]
 
 # 우리 프로젝트에서 사용할 User 모델은 accounts 앱에 있는 User 클래스야!
 AUTH_USER_MODEL = 'accounts.User'
