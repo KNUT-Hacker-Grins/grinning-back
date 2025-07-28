@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [".render.com", "localhost", "127.0.0.1"]
 
 # 우리 프로젝트에서 사용할 User 모델은 accounts 앱에 있는 User 클래스야!
 AUTH_USER_MODEL = 'accounts.User'
@@ -101,14 +102,10 @@ REST_FRAMEWORK = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mydb",         # 데이터베이스 이름
-        "USER": "root",         # PostgreSQL 사용자
-        "PASSWORD": "1111",    # 비밀번호
-        "HOST": "localhost",            # 또는 IP 주소
-        "PORT": "5432",                 # PostgreSQL 기본 포트
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default='sqlite:///db.sqlite3'), # Render 환경 변수 사용
+        conn_max_age=600
+    )
 }
 
 
@@ -147,6 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # 추가
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -155,6 +153,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://your-frontend-app.onrender.com", # Render 프론트엔드 도메인 추가
 ]
 
 # Django 기본 설정
