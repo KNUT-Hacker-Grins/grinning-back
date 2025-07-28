@@ -1,13 +1,13 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from ..models import LostItem
 from ..serializers import LostItemStatusSerializer
 from apps.lost_items.utils.responses import success_response, error_response
 
 
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def update_lost_item_status(request, id):
     """분실물 상태 변경 API"""
 

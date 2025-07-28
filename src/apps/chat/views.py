@@ -4,6 +4,7 @@ from rest_framework import status, pagination
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import localtime
 from .models import ChatRoom
 from ..found_items.models import FoundItem
 from ..lost_items.models import LostItem
@@ -108,7 +109,42 @@ class ChatMessageCreate(APIView):
                 'message': '전송 완료'
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+class ChatRoomListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        rooms = ChatRoom.objects.filter(participants=user).distinct()
+
+        result = []
+        for room in rooms:
+            last_message = (
+                ChatMessage.objects.filter(room=room)
+                .order_by('-timestamp')
+                .first()
+            )
+
+            unread_count = ChatMessage.objects.filter(
+                room=room,
+                is_read=False
+            ).exclude(sender=user).count()
+
+            other_user = room.participants.exclude(id=user.id).first()
+            result.append({
+                "room_id": str(room.id),
+                "other_user": {
+                    "id": other_user.social_id,
+                    "name": other_user.name,
+                    "email": other_user.email,
+                } if other_user else None,
+                "last_message": last_message.content if last_message else None,
+                "last_timestamp": localtime(last_message.timestamp).isoformat() if last_message else None,
+                "unread_count": unread_count,
+            })
+
+        return Response(result)
+
 class UnreadCountView(APIView):
     permission_classes = [IsAuthenticated]
 
