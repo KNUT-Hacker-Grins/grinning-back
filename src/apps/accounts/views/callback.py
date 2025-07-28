@@ -42,12 +42,14 @@ def google_callback(request):
             defaults={
                 'email': user_info['email'],
                 'name': user_info['name'],
-                'is_active': True
+                'is_active': True,
+                'profile_picture_url': user_info.get('profile_picture_url')
             }
         )
         if not created:
             user.email = user_info['email']
             user.name = user_info['name']
+            user.profile_picture_url = user_info.get('profile_picture_url')
             user.save()
 
         refresh = RefreshToken.for_user(user)
