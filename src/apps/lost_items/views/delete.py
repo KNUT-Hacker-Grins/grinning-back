@@ -1,12 +1,12 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from ..models import LostItem
 from apps.lost_items.utils.responses import success_response, error_response
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def delete_lost_item(request, id):
     """분실물 삭제 API"""
 
