@@ -42,10 +42,10 @@ class KakaoOAuth:
 
         return {
             'social_id': str(user_json['id']),
-            'email': email,
-            'name': nickname,
-            'profile_picture_url': profile_image,  # ✅ 프로필 이미지 URL 추가
-            'provider': 'kakao'
+            'email': email,  # 실제 이메일 또는 임시 이메일
+            'name': user_json['kakao_account']['profile']['nickname'],
+            'provider': 'kakao',
+            'profile_picture_url': user_json['kakao_account']['profile'].get('profile_image_url') # 추가
         }
 
 

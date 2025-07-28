@@ -111,6 +111,7 @@ def kakao_callback(request):
         if not created:
             user.email = user_info['email']
             user.name = user_info['name']
+            user.profile_picture_url = user_info.get('profile_picture_url') # 추가
             user.save()
 
         refresh = RefreshToken.for_user(user)
