@@ -32,18 +32,19 @@ class KakaoOAuth:
         user_response = requests.get(user_url, headers=headers)
         user_json = user_response.json()
 
-        # 3. 이메일 처리 (권한 없으면 임시 이메일 생성)
-        try:
-            # 이메일 권한이 있으면 실제 이메일 사용
-            email = user_json['kakao_account']['email']
-        except KeyError:
-            # 이메일 권한이 없으면 임시 이메일 생성
-            email = f"kakao_{user_json['id']}@temp.com"
+        kakao_account = user_json.get('kakao_account', {})
+        profile = kakao_account.get('profile', {})
+
+        # 이메일 처리 (권한 없으면 임시 이메일 생성)
+        email = kakao_account.get('email', f"kakao_{user_json['id']}@temp.com")
+        nickname = profile.get('nickname', '카카오 사용자')
+        profile_image = profile.get('profile_image_url', None)
 
         return {
             'social_id': str(user_json['id']),
-            'email': email,  # 실제 이메일 또는 임시 이메일
-            'name': user_json['kakao_account']['profile']['nickname'],
+            'email': email,
+            'name': nickname,
+            'profile_picture_url': profile_image,  # ✅ 프로필 이미지 URL 추가
             'provider': 'kakao'
         }
 
