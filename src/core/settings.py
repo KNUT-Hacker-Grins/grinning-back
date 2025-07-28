@@ -155,6 +155,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://unit6-back-1.onrender.com", # Render 프론트엔드 도메인 추가
     "https://unit6frontdx-2swg.vercel.app",
+    "https://unit6-front.vercel.app", # 실제 프론트엔드 도메인 추가
 ]
 
 # Django 기본 설정
