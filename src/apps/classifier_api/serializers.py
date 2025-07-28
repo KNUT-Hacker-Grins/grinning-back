@@ -12,4 +12,6 @@ class ClassificationSerializer(serializers.Serializer):
         # 이미지 분류
         prediction_list = predict_image(image_url)
         
-        return prediction_list
+        return {
+            'category': prediction_list
+        }
