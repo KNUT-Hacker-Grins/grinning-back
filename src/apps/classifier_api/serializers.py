@@ -13,4 +13,3 @@ class ClassificationSerializer(serializers.Serializer):
         prediction_list = predict_image(image_url)
         
         return prediction_list
-        
