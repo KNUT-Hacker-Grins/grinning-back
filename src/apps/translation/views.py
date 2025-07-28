@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from transformers import MarianMTModel, MarianTokenizer
 
 # 요청이 들어올 때 로딩 (캐시 덮어쓰기 문제 방지)
 LOADED_MODELS = {}
@@ -10,6 +9,9 @@ class TranslateAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        # transformers 임포트를 메서드 내부로 이동
+        from transformers import MarianMTModel, MarianTokenizer 
+
         text = request.data.get("text")
         source = request.data.get("source_language")
         target = request.data.get("target_language")
@@ -25,11 +27,11 @@ class TranslateAPIView(APIView):
             if lang_pair not in LOADED_MODELS:
                 model = MarianMTModel.from_pretrained(
                     f"Helsinki-NLP/opus-mt-{lang_pair}",
-                    cache_dir="./hf_models"
+                    cache_dir="/tmp/hf_models" # Render 환경에 맞게 캐시 디렉토리 변경
                 )
                 tokenizer = MarianTokenizer.from_pretrained(
                     f"Helsinki-NLP/opus-mt-{lang_pair}",
-                    cache_dir="./hf_models"
+                    cache_dir="/tmp/hf_models" # Render 환경에 맞게 캐시 디렉토리 변경
                 )
                 LOADED_MODELS[lang_pair] = {"model": model, "tokenizer": tokenizer}
             else:
