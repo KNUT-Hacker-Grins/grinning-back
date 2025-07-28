@@ -2,7 +2,7 @@ services:
   - type: web
     name: unit6-back # 서비스 이름 (원하는 이름으로 변경 가능)
     env: python
-    pythonVersion: 3.10.14 # 사용할 Python 버전 명시
+    pythonVersion: 3.9.0 # 사용할 Python 버전 명시
     buildCommand: "pip install -r requirements.txt && python src/manage.py collectstatic --noinput"
     startCommand: "gunicorn src.core.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
