@@ -79,5 +79,6 @@ class GoogleOAuth:
             'social_id': user_json['id'],
             'email': user_json['email'],  # 구글은 항상 실제 이메일
             'name': user_json['name'],
-            'provider': 'google'
+            'provider': 'google',
+            'profile_picture_url': user_json.get('picture') # 추가
         }

@@ -9,8 +9,8 @@ class UserResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'date_joined']
-        read_only_fields = ['id', 'name', 'email', 'date_joined']
+        fields = ['id', 'name', 'email', 'profile_picture_url', 'date_joined']
+        read_only_fields = ['id', 'name', 'email', 'profile_picture_url', 'date_joined']
 
     def to_representation(self, instance):
         """API 명세서에 맞게 필드명 변경"""
