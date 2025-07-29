@@ -24,6 +24,7 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'status', 'owner']
 
     def get_owner(self, obj):
+        user_name = obj.user.name if obj.user else None
         return {
-            "nickname": obj.user.name
+            "nickname": user_name
         }
