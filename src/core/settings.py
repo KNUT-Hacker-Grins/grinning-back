@@ -169,6 +169,7 @@ GOOGLE_REDIRECT_URI = config('GOOGLE_REDIRECT_URI', default='https://unit6frontd
 KAKAO_CLIENT_ID = config('KAKAO_CLIENT_ID', default='')
 KAKAO_CLIENT_SECRET = config('KAKAO_CLIENT_SECRET', default='')
 KAKAO_REDIRECT_URI = config('KAKAO_REDIRECT_URI', default='https://unit6frontdx-2swg.vercel.app/api/auth/kakao/callback')
+FRONTEND_BASE_URL = config('FRONTEND_BASE_URL', default='http://localhost:3000')
 
 # AWS S3 설정
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
