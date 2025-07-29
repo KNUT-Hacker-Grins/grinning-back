@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 import logging # 로깅을 위해 추가
 
 from apps.lost_items.utils.responses import error_response
+from core import settings
 from ..utils import GoogleOAuth, KakaoOAuth
 from ..serializers.response import LoginResponseSerializer
 from django.http import JsonResponse
