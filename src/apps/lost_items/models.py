@@ -44,4 +44,5 @@ class LostItem(models.Model):
         ordering = ['-created_at']  # 최신순 정렬
 
     def __str__(self):
-        return f"{self.title} - {self.user.name}"
+        user_name = self.user.name if self.user and hasattr(self.user, 'name') else "Unknown User"
+        return f"{self.title} - {user_name}"

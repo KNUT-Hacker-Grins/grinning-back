@@ -12,7 +12,7 @@ class KakaoOAuth:
             'grant_type': 'authorization_code',
             'client_id': settings.KAKAO_CLIENT_ID,
             'code': auth_code,
-            'redirect_uri': 'http://localhost:8000/api/auth/kakao/callback',
+            'redirect_uri': settings.KAKAO_REDIRECT_URI,
         }
 
         # Client Secret이 있으면 추가
@@ -60,7 +60,7 @@ class GoogleOAuth:
             'client_id': settings.GOOGLE_CLIENT_ID,
             'client_secret': settings.GOOGLE_CLIENT_SECRET,
             'code': auth_code,
-            'redirect_uri': 'http://localhost:8000/api/auth/google/callback',
+            'redirect_uri': settings.GOOGLE_REDIRECT_URI,
         }
 
         token_response = requests.post(token_url, data=token_data)
