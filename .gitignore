@@ -23,6 +23,11 @@ db.sqlite3
 # train, val dataset
 src/classifier/data/
 
+# environments
 venv/
 
+# translations model
 hf_models/
+
+# migations 
+/**/**/migrations
