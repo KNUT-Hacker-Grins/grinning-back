@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-ALLOWED_HOSTS = [".render.com", "localhost", "127.0.0.1", "unit6-back-1.onrender.com", "ec2-16-176-143-124.ap-southeast-2.compute.amazonaws.com", "unit6frontdx-2swg.vercel.app", "unit6-front.vercel.app"]
+ALLOWED_HOSTS = [".render.com", "unit6-back-1.onrender.com", "unit6frontdx-2swg.vercel.app", "unit6-front.vercel.app"]
 
 # 우리 프로젝트에서 사용할 User 모델은 accounts 앱에 있는 User 클래스야!
 AUTH_USER_MODEL = 'accounts.User'
@@ -80,6 +80,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
@@ -153,9 +154,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://unit6-back-1.onrender.com", # Render 프론트엔드 도메인 추가
     "https://unit6frontdx-2swg.vercel.app",
-    "https://unit6-front.vercel.app", # 실제 프론트엔드 도메인 추가
+    "https://unit6-front.vercel.app",
 ]
 
 # Django 기본 설정
@@ -169,12 +169,13 @@ GOOGLE_REDIRECT_URI = config('GOOGLE_REDIRECT_URI', default='https://unit6frontd
 KAKAO_CLIENT_ID = config('KAKAO_CLIENT_ID', default='')
 KAKAO_CLIENT_SECRET = config('KAKAO_CLIENT_SECRET', default='')
 KAKAO_REDIRECT_URI = config('KAKAO_REDIRECT_URI', default='https://unit6frontdx-2swg.vercel.app/api/auth/kakao/callback')
+FRONTEND_BASE_URL = config('FRONTEND_BASE_URL', default='http://localhost:3000')
 
 # AWS S3 설정
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='ap-northeast-2') # 예: 서울 리전
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='ap-southeast-2') # 예: 서울 리전
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
 AWS_S3_FILE_OVERWRITE = False # 같은 이름의 파일이 있을 경우 덮어쓰지 않음
 
@@ -190,3 +191,42 @@ MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/' # S3 버킷의 미디어 �
 # 업로드 파일 크기 제한 (5MB)
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        '': {  # Catch-all logger
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

@@ -17,7 +17,7 @@ def lost_items_list(request):
     status_filter = request.GET.get('status', None)
 
     # 2. 내 분실물만 필터링
-    queryset = LostItem.objects.filter(user=request.user).order_by('-created_at')
+    queryset = LostItem.objects.all().order_by('-created_at')
 
     # 3. 상태별 필터링 (선택사항)
     if status_filter:
