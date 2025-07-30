@@ -18,18 +18,8 @@ def lost_items_list(request):
     limit = int(request.GET.get('limit', 10))
     status_filter = request.GET.get('status', None)
 
-<<<<<<< HEAD
     # 2. 내 분실물만 필터링
     queryset = LostItem.objects.all().order_by('-created_at')
-=======
-    # 2. 사용자 인증 상태에 따른 필터링
-    if request.user.is_authenticated:
-        # 인증된 사용자: 자신의 분실물만 반환
-        queryset = LostItem.objects.filter(user=request.user).order_by('-created_at')
-    else:
-        # 비인증 사용자: 모든 분실물 반환
-        queryset = LostItem.objects.all().order_by('-created_at')
->>>>>>> origin/ksjksj
 
     # 3. 상태별 필터링 (선택사항)
     if status_filter:
