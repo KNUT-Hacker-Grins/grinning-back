@@ -1,7 +1,7 @@
 import os
-import shutil
+import json
 
-# 🧾 아이디 → 클래스명 매핑
+# YOLO 클래스 ID ↔️ 한글 클래스 이름
 item_dict = {
     174: "계산기", 167: "마우스", 156: "보조배터리", 146: "무선이어폰", 150: "스마트워치",
     141: "노트북", 136: "태블릿펜", 131: "태블릿", 132: "무선헤드폰", 133: "USB메모리",
@@ -11,45 +11,72 @@ item_dict = {
     464: "캡/야구 모자", 466: "백팩", 467: "지갑"
 }
 
-# 🧾 경로 설정
-txt_file_path = "id_image_list_피혁_잡화.txt"
-images_folder = r'C:\Users\user\Downloads\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\VS_피혁_잡화\mnt\nas2\Projects\TTA_2022_jgcha\jhbae\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\1.원천데이터\TL_피혁_잡화\leather01'
-output_base_folder = "./sorted_images"  # 복사본이 들어갈 루트 폴더
+# 경로 설정
+# target_list_path = './id_image_list_보석_귀금속_시계.txt' 
+# json_folder = r'C:\Users\user\Downloads\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\VL_보석_귀금속_시계\mnt\nas2\Projects\TTA_2022_jgcha\jhbae\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\2.라벨링데이터\VL_보석_귀금속_시계\jewlery01'
 
-# 🗂️ 출력 폴더 미리 생성
-for category_name in set(item_dict.values()):
-    target_dir = os.path.join(output_base_folder, category_name)
-    os.makedirs(target_dir, exist_ok=True)
+target_list_path = './id_image_list_문구류.txt' 
+json_folder = r'C:\Users\user\Downloads\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\VL_문구류\mnt\nas2\Projects\TTA_2022_jgcha\jhbae\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\2.라벨링데이터\VL_문구류\stationary01'
 
-# 📄 텍스트 파일 읽기
-with open(txt_file_path, 'r', encoding='utf-8') as f:
-    for line in f:
-        line = line.strip()
-        if not line:
+# target_list_path = './id_image_list_전자기기.txt' 
+# json_folder = r'C:\Users\user\Downloads\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\VL_전자기기\mnt\nas2\Projects\TTA_2022_jgcha\jhbae\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\2.라벨링데이터\VL_전자기기\electronics01'
+
+# target_list_path = './id_image_list_피혁_잡화.txt' 
+# json_folder = r'C:\Users\user\Downloads\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\VL_피혁_잡화\mnt\nas2\Projects\TTA_2022_jgcha\jhbae\037.Small object detection을 위한 이미지 데이터\01.데이터\2.Validation\2.라벨링데이터\VL_피혁_잡화\leather01'
+
+# 📄 대상 파일명 목록 불러오기 (확장자 없음)
+with open(target_list_path, 'r', encoding='utf-8') as f:
+    target_files = [line.strip().split()[1] for line in f if line.strip()]
+
+print(f"[INFO] 총 {len(target_files)}개 JSON 라벨링 처리 시작")
+
+# 전체 대상 처리
+for basename in target_files:
+    json_path = os.path.join(json_folder, basename + ".json")
+    if not os.path.exists(json_path):
+        print(f"[⚠️ 없음] {json_path}")
+        continue
+
+    with open(json_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    image_info = data.get("images", [{}])[0]
+    ann_list = data.get("annotations", [])
+
+    img_w = image_info.get("width")
+    img_h = image_info.get("height")
+    if not (img_w and img_h):
+        print(f"[무시됨] {basename}.json → 이미지 크기 없음")
+        continue
+
+    # 클래스 ID 추출 (첫 항목 기준)
+    if not ann_list:
+        print(f"[무시됨] {basename}.json → bbox 없음")
+        continue
+
+    for ann in ann_list:
+        category_id = ann.get("category_id")
+        bbox = ann.get("bbox")
+
+        if category_id not in item_dict or not bbox:
+            print(f"[무시됨] {basename}.json → 알 수 없는 클래스 ID: {category_id}")
             continue
-        try:
-            category_id_str, image_filename = line.split()
-            category_id = int(category_id_str)
 
-            # id → 클래스명 변환
-            category_name = item_dict.get(category_id)
-            if not category_name:
-                print(f"[무시됨] 알 수 없는 ID: {category_id}")
-                continue
+        class_name = item_dict[category_id]
 
-            # 원본 이미지 경로 (.jpg라고 가정)
-            src_image_path = os.path.join(images_folder, image_filename + ".jpg")
+        x, y, w, h = bbox
+        x_center = (x + w / 2) / img_w
+        y_center = (y + h / 2) / img_h
+        w_norm = w / img_w
+        h_norm = h / img_h
 
-            if not os.path.exists(src_image_path):
-                print(f"[❌ 없음] {src_image_path}")
-                continue
+        yolo_line = f"{category_id} {x_center:.6f} {y_center:.6f} {w_norm:.6f} {h_norm:.6f}\n"
 
-            # 복사 대상 폴더
-            dest_path = os.path.join(output_base_folder, category_name, image_filename + ".jpg")
-            shutil.copy2(src_image_path, dest_path)
-            print(f"[복사됨] {image_filename}.jpg → {category_name}/")
+        yolo_txt_path = os.path.join("./sorted_images", str(item_dict[category_id]), basename + ".txt")
 
-        except ValueError as e:
-            print(f"[오류] 라인 파싱 실패: '{line}'")
+        with open(yolo_txt_path, 'w', encoding='utf-8') as out:
+            out.write(yolo_line)
 
-print("\n✅ 이미지 정리가 완료되었습니다.")
+    print(f"[✅ 완료] {basename}.json → {class_name}/{basename}.txt")
+
+print("\n🎉 지정된 JSON 파일만 YOLO 포맷으로 변환 완료!")
