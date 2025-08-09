@@ -108,4 +108,4 @@ class ImgDownloadCrawler(ChromeDriverService):
             self.stop()
 
 if __name__ == "__main__":
-    ImgDownloadCrawler().start_download("카드", 50) 
+    ImgDownloadCrawler().start_download("그램", 50) 
