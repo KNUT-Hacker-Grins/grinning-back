@@ -9,7 +9,7 @@ from apps.found_items.models import FoundItem
 class MapItemSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField(max_length=100)
-    image_url = serializers.URLField(max_length=500)
+    image_url = serializers.CharField(max_length=500, allow_null=True, allow_blank=True)
     latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
     longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
     item_type = serializers.CharField(max_length=10) # 'lost' or 'found'
@@ -37,7 +37,7 @@ class MapItemsView(APIView):
             combined_items.append({
                 'id': item.id,
                 'title': item.title,
-                'image_url': item.image_url, # Assuming image_url is a single field
+                'image_url': item.image_urls[0] if item.image_urls else None, # Now using image_urls
                 'latitude': item.latitude,
                 'longitude': item.longitude,
                 'item_type': 'found'
