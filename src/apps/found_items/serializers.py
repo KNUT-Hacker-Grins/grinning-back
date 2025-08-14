@@ -19,11 +19,15 @@ class FoundItemSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_url = validated_data.get('image_url')
-        if image_url: # Only predict if image_url is provided
-            category = predict_image(image_url)
-            validated_data['category'] = category if category else {} # Ensure it's a dict/list, not 'unknown' string
+        if image_url:
+            try:
+                category = predict_image(image_url)
+                validated_data['category'] = category if category else {}
+            except ImageClassificationError as e:
+                print(f"[이미지 분류 오류] {e}") # 오류 로깅
+                validated_data['category'] = {} # 분류 실패 시 빈 사전으로 설정
         else:
-            validated_data['category'] = {} # Default to empty dict if no image_url
+            validated_data['category'] = {}
         return super().create(validated_data)
     
     # def update(self, instance, validated_data):
