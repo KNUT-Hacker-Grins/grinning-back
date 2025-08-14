@@ -13,6 +13,8 @@ class LostItemCreateSerializer(serializers.ModelSerializer):
             'description',
             'lost_at',
             'lost_location',
+            'latitude',
+            'longitude',
             'image_urls',
             'category',
             'reward'
@@ -32,6 +34,8 @@ class LostItemUpdateSerializer(serializers.ModelSerializer):
             'description',
             'lost_at',
             'lost_location',
+            'latitude',
+            'longitude',
             'image_urls',
             'category',
             'reward'

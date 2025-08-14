@@ -54,8 +54,10 @@ INSTALLED_APPS = [
     "apps.chat",
     'apps.reports',
     'apps.classifier_api',
-    "apps.translation",
+        "apps.translation",
+    "apps.map_api",
 ]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

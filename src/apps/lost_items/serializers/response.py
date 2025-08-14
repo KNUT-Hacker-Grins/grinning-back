@@ -11,17 +11,18 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = LostItem
         fields = [
-            'id',
-            'title',
             'description',
+            'lost_at',
             'lost_location',
+            'latitude',
+            'longitude',
             'image_urls',
             'category',
             'reward',
             'status',
             'owner'
         ]
-        read_only_fields = ['id', 'status', 'owner']
+        read_only_fields = ['id', 'status', 'owner', 'lost_at', 'lost_location', 'latitude', 'longitude']
 
     def get_owner(self, obj):
         user_name = obj.user.name if obj.user else None

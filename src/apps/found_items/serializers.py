@@ -11,8 +11,8 @@ class OwnerSerializer(serializers.ModelSerializer):
 class FoundItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoundItem
-        fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'image_url', 'category', 'status', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status']
+        fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_url', 'category', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status', 'found_at', 'found_location', 'latitude', 'longitude']
 
     # def create(self, validated_data):
     #     image_url = validated_data.get('image_url')
@@ -32,4 +32,4 @@ class FoundItemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FoundItem
-        fields = ['id', 'title', 'user', 'description', 'found_at', 'found_location', 'category', 'image_url']
+        fields = ['id', 'title', 'user', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'category', 'image_url']
