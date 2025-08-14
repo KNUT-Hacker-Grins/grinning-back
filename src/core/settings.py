@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     "apps.lost_items",
     "apps.chat",
     'apps.reports',
-    'apps.classifier_api',
+    'apps.image_classifier',
     "apps.translation",
 ]
 

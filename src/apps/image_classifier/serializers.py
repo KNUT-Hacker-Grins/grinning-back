@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .predictor import predict_yolo
+from .services.predictor import predict_yolo
 
 class ClassificationSerializer(serializers.Serializer):
     image_url = serializers.URLField(help_text="분류할 이미지의 URL")
