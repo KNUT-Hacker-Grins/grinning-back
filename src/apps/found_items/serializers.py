@@ -9,10 +9,12 @@ class OwnerSerializer(serializers.ModelSerializer):
         fields = ['social_id', 'email', 'name'] 
 
 class FoundItemSerializer(serializers.ModelSerializer):
+    latitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=False, allow_null=True)
+    longitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=False, allow_null=True)
     class Meta:
         model = FoundItem
         fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_url', 'category', 'status', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status', 'found_at', 'found_location', 'latitude', 'longitude']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status', 'found_at', 'found_location']
 
     # def create(self, validated_data):
     #     image_url = validated_data.get('image_url')
