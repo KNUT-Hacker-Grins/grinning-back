@@ -11,6 +11,7 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = LostItem
         fields = [
+            'id',
             'description',
             'lost_at',
             'lost_location',
