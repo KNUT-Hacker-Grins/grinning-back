@@ -5,8 +5,10 @@ os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
 
 import torch
-from ultralytics import YOLO
+from PIL import Image
 from pathlib import Path
+from ultralytics import YOLO
+from .image_utils import download_image
 
 # === 경로 설정 ===
 BASE_DIR = Path(__file__).resolve().parents[2]  
@@ -61,14 +63,22 @@ def _process_single_result(result):
         })
     return outputs
 
-def predict_yolo(image_file: str, imgsz: int = 512, conf_thres: float = 0.25, iou_thres: float = 0.65):
+def predict_yolo(param: str, imgsz: int = 512, conf_thres: float = 0.25, iou_thres: float = 0.65):
     """
     이미지 경로를 넣으면 감지 결과를 리스트로 반환
     - t3.micro(1GB) 대응: imgsz<=512, batch=1, 스레드=1
     """
     # 경로 그대로 넘기는 게 메모리상 유리
+
+    if isinstance(param, str) and param.startswith("http"):
+        img = download_image(param)
+    elif hasattr(param, "read"):
+        img = Image.open(param).convert("RGB")
+    else:
+        raise ValueError("지원하지 않는 이미지 입력 형식입니다.")
+
     results = model.predict(
-        source=image_file,
+        source=img,
         imgsz=imgsz,
         device="cpu",
         conf=conf_thres,
