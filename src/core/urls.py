@@ -2,10 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from .views.map_posts_lister import MapPostListView
 
 # 기존 urlpatterns
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('api/map/posts', MapPostListView.as_view(), name='map_posts_list'),
     path('api/upload/', include('apps.uploads.urls')),
     path('api/lost-items/', include('apps.lost_items.urls')),
     path('api/found-items/', include('apps.found_items.urls')), 

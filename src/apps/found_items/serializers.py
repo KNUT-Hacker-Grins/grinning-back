@@ -11,7 +11,7 @@ class OwnerSerializer(serializers.ModelSerializer):
 class FoundItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoundItem
-        fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'image_url', 'category', 'status', 'created_at', 'updated_at']
+        fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_url', 'category', 'status', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status']
 
     # def create(self, validated_data):

@@ -31,3 +31,6 @@ hf_models/
 
 # migations 
 /**/**/migrations
+
+# Embedded git repository
+Unit6-front-/.git
