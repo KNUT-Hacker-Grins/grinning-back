@@ -9,8 +9,8 @@ class OwnerSerializer(serializers.ModelSerializer):
         fields = ['social_id', 'email', 'name'] 
 
 class FoundItemSerializer(serializers.ModelSerializer):
-    latitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=False, allow_null=True)
-    longitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=False, allow_null=True)
+    latitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
+    longitude = serializers.DecimalField(max_digits=11, decimal_places=7, required=False, allow_null=True)
     class Meta:
         model = FoundItem
         fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_url', 'category', 'status', 'created_at', 'updated_at']
