@@ -11,23 +11,25 @@ class OwnerSerializer(serializers.ModelSerializer):
 class FoundItemSerializer(serializers.ModelSerializer):
     latitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
     longitude = serializers.DecimalField(max_digits=11, decimal_places=7, required=False, allow_null=True)
-    image_url = serializers.URLField(max_length=500, required=False, allow_null=True)
+    image_urls = serializers.JSONField(required=False, allow_null=True)
+    found_date = serializers.DateTimeField(write_only=True, source='found_at')
     class Meta:
         model = FoundItem
-        fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_url', 'category', 'status', 'created_at', 'updated_at']
+        fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_urls', 'category', 'status', 'created_at', 'updated_at', 'found_date']
         read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status', 'found_at', 'found_location']
 
     def create(self, validated_data):
-        image_url = validated_data.get('image_url')
-        if image_url:
+        image_urls = validated_data.get('image_urls')
+        if image_urls and len(image_urls) > 0: # Check if image_urls is not empty
             try:
-                category = predict_image(image_url)
+                # Use the first image URL for prediction
+                category = predict_image(image_urls[0])
                 validated_data['category'] = category if category else {}
             except ImageClassificationError as e:
-                print(f"[이미지 분류 오류] {e}") # 오류 로깅
-                validated_data['category'] = {} # 분류 실패 시 빈 사전으로 설정
+                print(f"[이미지 분류 오류] {e}") # Log the error
+                validated_data['category'] = {} # Set to empty dict on failure
         else:
-            validated_data['category'] = {}
+            validated_data['category'] = {} # Default to empty dict if no image_urls
         return super().create(validated_data)
     
     # def update(self, instance, validated_data):

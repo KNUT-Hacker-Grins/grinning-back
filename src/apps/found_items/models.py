@@ -21,7 +21,7 @@ class FoundItem(models.Model):
     found_location = models.CharField(max_length=200)
     latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
     longitude = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=True)
-    image_url = models.URLField(max_length=500, null=True, blank=True)
+    image_urls = models.JSONField(default=list, null=True, blank=True)
     category = models.JSONField(default=dict)
     status = models.CharField(
         max_length=20, 
