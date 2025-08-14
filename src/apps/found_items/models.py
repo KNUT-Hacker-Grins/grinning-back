@@ -19,6 +19,8 @@ class FoundItem(models.Model):
     description = models.TextField()
     found_at = models.DateTimeField()
     found_location = models.CharField(max_length=200)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)  # 위도
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)  # 경도
     image_url = models.URLField(max_length=500)
     category = models.JSONField(default=dict)
     status = models.CharField(

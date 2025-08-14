@@ -15,6 +15,8 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'lost_location',
+            'latitude',
+            'longitude',
             'image_urls',
             'category',
             'reward',

@@ -32,4 +32,4 @@ class FoundItemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FoundItem
-        fields = ['id', 'title', 'user', 'description', 'found_at', 'found_location', 'category', 'image_url']
+        fields = ['id', 'title', 'user', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'category', 'image_url']
