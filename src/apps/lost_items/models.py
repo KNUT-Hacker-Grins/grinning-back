@@ -20,7 +20,7 @@ class LostItem(models.Model):
     longitude = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=True)
 
     image_urls = models.JSONField(default=list)  # 이미지 URL 배열
-    category = models.JSONField(default=dict)
+    category = models.JSONField(default=list)
     
     reward = models.DecimalField(
         max_digits=10,
