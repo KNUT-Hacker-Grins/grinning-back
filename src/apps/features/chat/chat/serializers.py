@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import ChatRoom, ChatMessage
 from django.contrib.auth import get_user_model
-from apps.accounts.serializers.simple_user import SimpleUserSerializer
+from apps.identity.accounts.serializers.simple_user import SimpleUserSerializer
 
 class ChatRoomSerializer(serializers.ModelSerializer):
     participants = SimpleUserSerializer(many=True)

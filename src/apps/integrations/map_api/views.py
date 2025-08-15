@@ -2,9 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import serializers
-
-from apps.lost_items.models import LostItem
-from apps.found_items.models import FoundItem
+from apps.features.lostfound.lost_items.models import LostItem
+from apps.features.lostfound.found_items.models import FoundItem
 
 class MapItemSerializer(serializers.Serializer):
     id = serializers.IntegerField()

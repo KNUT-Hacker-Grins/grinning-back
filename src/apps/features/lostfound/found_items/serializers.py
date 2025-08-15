@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import FoundItem
-from apps.accounts.models import User
-from apps.image_classifier.services.predictor import predict_yolo
-from apps.image_classifier.error import ImageClassificationError # Add this import
+from apps.identity.accounts.models import User
+from apps.common.error.error import ImageClassificationError 
+from apps.ml.image_classifier.services.predictor import predict_yolo
 
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:

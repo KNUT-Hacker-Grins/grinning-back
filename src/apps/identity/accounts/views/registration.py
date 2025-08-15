@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from apps.lost_items.utils.responses import success_response, error_response
-from ..serializers.request import RegisterRequestSerializer
+from apps.common.utils.responses import error_response, success_response
+from apps.identity.accounts.serializers.request import RegisterRequestSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

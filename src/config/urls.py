@@ -6,16 +6,16 @@ from django.conf.urls.static import static
 # 기존 urlpatterns
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api/upload/', include('apps.uploads.urls')),
-    path('api/lost-items/', include('apps.lost_items.urls')),
-    path('api/found-items/', include('apps.found_items.urls')), 
-    path('api/chat/', include('apps.chat.urls')), 
-    path('api/', include('apps.reports.urls')),
-    path('api/classify/', include('apps.classifier_api.urls')),
-    path('api/translation/', include('apps.translation.urls')),
-    path('api/', include('apps.accounts.urls')),
-    path('api/map/', include('apps.map_api.urls')),
-    path('api/chatbot/', include('apps.chatbot.urls')), 
+    path('api/chat/', include('apps.features.chat.chat.urls')), 
+    path('api/chatbot/', include('apps.features.chat.chatbot.urls')), 
+    path('api/found-items/', include('apps.features.lostfound.found_items.urls')), 
+    path('api/lost-items/', include('apps.features.lostfound.lost_items.urls')),
+    path('api/', include('apps.features.lostfound.reports.urls')),
+    path('api/', include('apps.identity.accounts.urls')),
+    path('api/classify/', include('apps.ml.image_classifier.urls')),
+    path('api/translation/', include('apps.ml.translation.urls')),
+    path('api/map/', include('apps.integrations.map_api.urls')),
+    path('api/upload/', include('apps.integrations.uploads.urls')),
 ]
 
 # 개발환경에서만 미디어 파일 서빙

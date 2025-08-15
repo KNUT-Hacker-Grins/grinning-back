@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from ..serializers import LostItemCreateSerializer
-from apps.lost_items.utils.responses import success_response, error_response
+from apps.common.utils.responses import success_response, error_response
+from apps.features.lostfound.lost_items.serializers import LostItemCreateSerializer
 
 
 @api_view(['POST'])

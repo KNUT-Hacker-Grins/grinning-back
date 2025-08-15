@@ -4,14 +4,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, pagination
 from rest_framework.permissions import IsAuthenticated
-from apps.chat.models import ChatRoom
-from apps.found_items.models import FoundItem
-from apps.lost_items.models import LostItem
-from apps.chat.serializers import ChatRoomSerializer
-from apps.chat.models import ChatRoom, ChatMessage
-from apps.chat.serializers import ChatMessageSerializer
-
-
+from apps.features.chat.chat.models import ChatRoom
+from apps.features.chat.chat.serializers import ChatRoomSerializer
+from apps.features.chat.chat.models import ChatRoom, ChatMessage
+from apps.features.chat.chat.serializers import ChatMessageSerializer
+from apps.features.lostfound.found_items.models import FoundItem
+from apps.features.lostfound.lost_items.models import LostItem
 
 class ChatMessageCreateView(APIView):
     def post(self, request, room_id):
