@@ -16,9 +16,11 @@ class LostItem(models.Model):
 
     lost_at = models.DateTimeField()  # 분실한 날짜/시간
     lost_location = models.CharField(max_length=200)  # 분실한 장소
+    latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=True)
 
     image_urls = models.JSONField(default=list)  # 이미지 URL 배열
-    category = models.JSONField(default=dict)
+    category = models.JSONField(default=list)
     
     reward = models.DecimalField(
         max_digits=10,
