@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'apps.reports',
     'apps.image_classifier',
     "apps.translation",
+    "apps.map_api",
 ]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -106,8 +108,6 @@ REST_FRAMEWORK = {
 }
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -117,8 +117,6 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -136,8 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = "ko-kr"
 
@@ -148,14 +144,10 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # 추가
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -176,7 +168,7 @@ GOOGLE_REDIRECT_URI = config('GOOGLE_REDIRECT_URI', default='https://unit6frontd
 KAKAO_CLIENT_ID = config('KAKAO_CLIENT_ID', default='')
 KAKAO_CLIENT_SECRET = config('KAKAO_CLIENT_SECRET', default='')
 KAKAO_REDIRECT_URI = config('KAKAO_REDIRECT_URI', default='https://unit6frontdx-2swg.vercel.app/api/auth/kakao/callback')
-FRONTEND_BASE_URL = config('FRONTEND_BASE_URL', default='http://localhost:3000')
+FRONTEND_BASE_URL = config('FRONTEND_BASE_URL', default='https://unit6-front.vercel.app')
 
 # AWS S3 설정
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')

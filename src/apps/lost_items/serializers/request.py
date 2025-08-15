@@ -4,6 +4,8 @@ from ..models import LostItem
 
 
 class LostItemCreateSerializer(serializers.ModelSerializer):
+    latitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
+    longitude = serializers.DecimalField(max_digits=11, decimal_places=7, required=False, allow_null=True)
     """분실물 신고 등록용 시리얼라이저"""
 
     class Meta:
@@ -13,6 +15,8 @@ class LostItemCreateSerializer(serializers.ModelSerializer):
             'description',
             'lost_at',
             'lost_location',
+            'latitude',
+            'longitude',
             'image_urls',
             'category',
             'reward'
@@ -23,6 +27,8 @@ class LostItemCreateSerializer(serializers.ModelSerializer):
 
 
 class LostItemUpdateSerializer(serializers.ModelSerializer):
+    latitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
+    longitude = serializers.DecimalField(max_digits=11, decimal_places=7, required=False, allow_null=True)
     """분실물 신고 수정용 시리얼라이저"""
 
     class Meta:
@@ -32,6 +38,8 @@ class LostItemUpdateSerializer(serializers.ModelSerializer):
             'description',
             'lost_at',
             'lost_location',
+            'latitude',
+            'longitude',
             'image_urls',
             'category',
             'reward'
