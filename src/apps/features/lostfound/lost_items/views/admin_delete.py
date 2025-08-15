@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
-from ..models import LostItem
-from apps.lost_items.utils.permissions import IsAdminUser
-from apps.lost_items.utils.responses import success_response
+from apps.features.lostfound.lost_items.models import LostItem
+from apps.common.utils.permissions import IsAdminUser
+from apps.common.utils.responses import success_response
 
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])

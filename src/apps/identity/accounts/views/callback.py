@@ -1,17 +1,14 @@
-from django.shortcuts import redirect
+import logging 
+from config import settings
 from urllib.parse import urlencode
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
+from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import get_user_model
-import logging # 로깅을 위해 추가
-
-from apps.lost_items.utils.responses import error_response
-from core import settings
-from ..utils import GoogleOAuth, KakaoOAuth
-from ..serializers.response import LoginResponseSerializer
-from django.http import JsonResponse
+from rest_framework.decorators import api_view, permission_classes, renderer_classes
+from apps.common.utils.responses import error_response
+from apps.identity.accounts.utils import GoogleOAuth, KakaoOAuth
 
 User = get_user_model()
 

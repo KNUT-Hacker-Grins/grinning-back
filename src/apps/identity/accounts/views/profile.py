@@ -2,9 +2,9 @@ from rest_framework.views import APIView # APIView 임포트
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from ..serializers.response import UserResponseSerializer
-from apps.lost_items.utils.responses import success_response, error_response
-from ..serializers.request import UserProfileUpdateSerializer
+from apps.common.utils.responses import error_response, success_response
+from apps.identity.accounts.serializers.request import UserProfileUpdateSerializer
+from apps.identity.accounts.serializers.response import UserResponseSerializer
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]

@@ -31,3 +31,5 @@ hf_models/
 
 # migations 
 /**/**/migrations
+
+apps/**/weights/**/*.pt

@@ -3,8 +3,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from ..utils import KakaoOAuth, GoogleOAuth
-from apps.lost_items.utils.responses import success_response, error_response
-from ..serializers import LoginRequestSerializer, LoginResponseSerializer
+from apps.common.utils.responses import error_response, success_response
+from apps.identity.accounts.serializers.request import LoginRequestSerializer
+from apps.identity.accounts.serializers.response import LoginResponseSerializer 
+
 
 User = get_user_model()
 

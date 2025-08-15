@@ -1,10 +1,9 @@
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from ..models import LostItem
-from ..serializers import LostItemResponseSerializer
-from apps.lost_items.utils.responses import success_response
-
+from apps.common.utils.responses import success_response
+from apps.features.lostfound.lost_items.models import LostItem
+from apps.features.lostfound.lost_items.serializers import LostItemResponseSerializer
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
