@@ -30,3 +30,13 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
         return {
             "nickname": user_name
         }
+
+    def to_representation(self, instance):
+        # Get the default representation
+        ret = super().to_representation(instance)
+        
+        # Ensure image_urls is always a list
+        if not isinstance(ret.get('image_urls'), list):
+            ret['image_urls'] = []
+        
+        return ret
