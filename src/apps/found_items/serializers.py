@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from classifier.predictor import predict_image
 from .models import FoundItem
-from ..accounts.models import User
-from classifier.error import ImageClassificationError # Add this import
+from apps.accounts.models import User
+from apps.image_classifier.services.predictor import predict_yolo
+from apps.image_classifier.error import ImageClassificationError # Add this import
 
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,13 +24,13 @@ class FoundItemSerializer(serializers.ModelSerializer):
         if image_urls and len(image_urls) > 0: # Check if image_urls is not empty
             try:
                 # Use the first image URL for prediction
-                category = predict_image(image_urls[0])
-                validated_data['category'] = category if category else {}
+                data = predict_yolo(image_urls[0])
+                validated_data = data if data else []
             except ImageClassificationError as e:
                 print(f"[이미지 분류 오류] {e}") # Log the error
-                validated_data['category'] = {} # Set to empty dict on failure
+                validated_data = [] # Set to empty dict on failure
         else:
-            validated_data['category'] = {} # Default to empty dict if no image_urls
+            validated_data = [] # Default to empty dict if no image_urls
         return super().create(validated_data)
     
     # def update(self, instance, validated_data):

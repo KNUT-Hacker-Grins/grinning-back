@@ -15,6 +15,7 @@ urlpatterns = [
     path('api/translation/', include('apps.translation.urls')),
     path('api/', include('apps.accounts.urls')),
     path('api/map/', include('apps.map_api.urls')),
+    path('api/chatbot/', include('apps.chatbot.urls')), 
 ]
 
 # 개발환경에서만 미디어 파일 서빙
