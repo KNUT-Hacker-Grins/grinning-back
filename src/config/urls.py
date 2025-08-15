@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/chat/', include('apps.features.chat.chat.urls')), 
-    path('api/chatbot/', include('apps.features.chat.chatbot.urls')), 
+    # path('api/chatbot/', include('apps.features.chat.chatbot.urls')), 
     path('api/found-items/', include('apps.features.lostfound.found_items.urls')), 
     path('api/lost-items/', include('apps.features.lostfound.lost_items.urls')),
     path('api/', include('apps.features.lostfound.reports.urls')),
