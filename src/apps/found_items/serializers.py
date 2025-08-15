@@ -2,6 +2,7 @@ from rest_framework import serializers
 from classifier.predictor import predict_image
 from .models import FoundItem
 from ..accounts.models import User
+from classifier.error import ImageClassificationError # Add this import
 
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,4 +45,4 @@ class FoundItemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FoundItem
-        fields = ['id', 'title', 'user', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'category', 'image_url']
+        fields = ['id', 'title', 'user', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'category', 'image_urls']
