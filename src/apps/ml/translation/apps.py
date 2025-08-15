@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class TranslationConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "apps.translation"
+    name = "apps.ml.translation"
