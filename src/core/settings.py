@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'apps.image_classifier',
     "apps.translation",
     "apps.map_api",
+    'apps.chatbot',
 ]
 
 
