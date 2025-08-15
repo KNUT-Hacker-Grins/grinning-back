@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class ClassifierApiConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.image_classifier'
+    name = 'apps.ml.image_classifier'
