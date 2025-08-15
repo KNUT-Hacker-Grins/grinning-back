@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ClassificationSerializer
+from .error import ImageClassificationError
 
 class ClassificationView(APIView):
     permission_classes = [IsAuthenticated]
@@ -18,6 +19,12 @@ class ClassificationView(APIView):
                     "data": classified_data,
                     "message": "이미지 분류 성공"
                 }, status=status.HTTP_200_OK)
+            except ImageClassificationError as e:
+                return Response({
+                    "status": "error",
+                    "code": 500,
+                    "message": f"이미지 분류 중 오류가 발생했습니다: {e}"
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
                 return Response({
                     "status": "error",
