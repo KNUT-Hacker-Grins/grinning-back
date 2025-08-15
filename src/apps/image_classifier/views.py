@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ClassificationSerializer
-from classifier.error import ImageClassificationError
+from .error import ImageClassificationError
 
 class ClassificationView(APIView):
     permission_classes = [IsAuthenticated]
