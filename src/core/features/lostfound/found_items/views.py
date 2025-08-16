@@ -4,10 +4,10 @@ from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
-from core.features.lostfound.found_items.models import FoundItem
-from core.features.lostfound.found_items.serializers import FoundItemSerializer
-from core.features.lostfound.found_items.serializers import FoundItemDetailSerializer
-from core.features.lostfound.found_items.utils import get_filtered_found_items
+from .models import FoundItem
+from .serializers import FoundItemSerializer
+from .serializers import FoundItemDetailSerializer
+from .utils import get_filtered_found_items
 
 class AdminFoundItemListView(APIView):
     permission_classes = [permissions.IsAdminUser]

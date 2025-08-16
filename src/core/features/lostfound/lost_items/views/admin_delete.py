@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
-from core.features.lostfound.lost_items.models import LostItem
+from ..models import LostItem
 from core.common.utils.permissions import IsAdminUser
 from core.common.utils.responses import success_response
 

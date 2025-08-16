@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from core.common.utils.responses import success_response, error_response
-from core.features.lostfound.lost_items.models import LostItem
-from core.features.lostfound.lost_items.serializers import LostItemResponseSerializer
+from ..models import LostItem
+from ..serializers import LostItemResponseSerializer
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

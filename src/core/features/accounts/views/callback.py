@@ -8,7 +8,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from core.common.utils.responses import error_response
-from core.features.accounts.utils import GoogleOAuth, KakaoOAuth
+from ..utils import GoogleOAuth, KakaoOAuth
 
 User = get_user_model()
 

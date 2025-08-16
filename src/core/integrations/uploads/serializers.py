@@ -1,7 +1,7 @@
+import os
+import uuid
 from rest_framework import serializers
 from django.core.files.storage import default_storage
-import uuid
-import os
 
 class FileUploadSerializer(serializers.Serializer):
     image = serializers.ImageField(write_only=True)

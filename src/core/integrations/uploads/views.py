@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
-from core.integrations.uploads.serializers import FileUploadSerializer
+from .serializers import FileUploadSerializer
 
 class FileUploadView(APIView):
     permission_classes = [IsAuthenticated]

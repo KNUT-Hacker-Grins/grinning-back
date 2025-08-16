@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from core.common.utils.responses import error_response, success_response
-from core.features.accounts.serializers.request import LoginPasswordRequestSerializer
-from core.features.accounts.serializers.response import LoginResponseSerializer # 기존 로그인 응답 시리얼라이저 재사용
+from ..serializers.request import LoginPasswordRequestSerializer
+from ..serializers.response import LoginResponseSerializer # 기존 로그인 응답 시리얼라이저 재사용
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

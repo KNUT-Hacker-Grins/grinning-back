@@ -4,8 +4,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from ..utils import KakaoOAuth, GoogleOAuth
 from core.common.utils.responses import error_response, success_response
-from core.features.accounts.serializers.request import LoginRequestSerializer
-from core.features.accounts.serializers.response import LoginResponseSerializer 
+from ..serializers.request import LoginRequestSerializer
+from ..serializers.response import LoginResponseSerializer 
 
 
 User = get_user_model()

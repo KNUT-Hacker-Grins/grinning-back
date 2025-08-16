@@ -4,10 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, pagination
 from rest_framework.permissions import IsAuthenticated
-from core.features.chat.chat.models import ChatRoom
-from core.features.chat.chat.serializers import ChatRoomSerializer
-from core.features.chat.chat.models import ChatRoom, ChatMessage
-from core.features.chat.chat.serializers import ChatMessageSerializer
+from .models import ChatRoom
+from .serializers import ChatRoomSerializer
+from .models import ChatRoom, ChatMessage
+from .serializers import ChatMessageSerializer
 from core.features.lostfound.found_items.models import FoundItem
 from core.features.lostfound.lost_items.models import LostItem
 

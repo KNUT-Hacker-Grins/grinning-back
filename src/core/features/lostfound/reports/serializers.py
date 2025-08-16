@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from django.contrib.contenttypes.models import ContentType
 from .models import Report
-from rest_framework import serializers
-from django.contrib.contenttypes.models import ContentType
-from .models import Report
 
 class ReportSerializer(serializers.ModelSerializer):
     # 클라이언트에서 입력받을 필드
