@@ -47,17 +47,17 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework_simplejwt",
-    "apps.common",
-    "apps.identity.accounts",
-    "apps.features.chat.chat",
-    "apps.features.chat.chatbot",
-    "apps.features.lostfound.found_items",
-    "apps.features.lostfound.lost_items",
-    "apps.features.lostfound.reports",
-    "apps.integrations.uploads",
-    "apps.integrations.map_api",
-    "apps.ml.image_classifier",
-    "apps.ml.translation",
+    "core.common",
+    "core.features.accounts",
+    "core.features.chat.chat",
+    "core.features.chat.chatbot",
+    "core.features.lostfound.found_items",
+    "core.features.lostfound.lost_items",
+    "core.features.lostfound.reports",
+    "core.integrations.uploads",
+    "core.integrations.map_api",
+    "core.ai_gateway.image_classifier",
+    "core.ai_gateway.translation",
 ]
 
 
@@ -180,6 +180,8 @@ AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='ap-southeast-2') # �
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
 AWS_S3_FILE_OVERWRITE = False # 같은 이름의 파일이 있을 경우 덮어쓰지 않음
 
+# Gemini API Key 설정 
+GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
