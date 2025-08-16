@@ -1,9 +1,6 @@
 # Python cache
-__pycache__/
 /**/__pycache__
 /**/**/__pycache__
-*.pyc
-*.pyo
 
 # Django migrations and DB
 
@@ -32,4 +29,5 @@ hf_models/
 # migations 
 /**/**/migrations
 
-apps/**/weights/**/*.pt
+# model file
+/**/**/*.pt          
