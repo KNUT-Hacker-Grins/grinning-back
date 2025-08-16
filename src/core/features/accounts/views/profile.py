@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from core.common.utils.responses import error_response, success_response
-from core.features.accounts.serializers.request import UserProfileUpdateSerializer
-from core.features.accounts.serializers.response import UserResponseSerializer
+from ..serializers.request import UserProfileUpdateSerializer
+from ..serializers.response import UserResponseSerializer
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]

@@ -1,4 +1,4 @@
-from core.features.lostfound.found_items.models import FoundItem
+from .models import FoundItem
 
 def get_filtered_found_items(request):
     queryset = FoundItem.objects.all().order_by('-id')

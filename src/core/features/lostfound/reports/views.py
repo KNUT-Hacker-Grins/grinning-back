@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status as http_status
 from rest_framework.permissions import IsAuthenticated
+from .models import Report
+from .serializers import ReportSerializer
 from core.features.lostfound.lost_items.models import LostItem
-from core.features.lostfound.reports.models import Report
-from core.features.lostfound.reports.serializers import ReportSerializer
 
 class MarkAsFoundView(APIView):
     permission_classes = [IsAuthenticated]

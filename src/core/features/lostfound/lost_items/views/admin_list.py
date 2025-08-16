@@ -2,8 +2,8 @@ from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
 from core.common.utils.permissions import IsAdminUser
 from core.common.utils.responses import success_response
-from core.features.lostfound.lost_items.models import LostItem
-from core.features.lostfound.lost_items.serializers.response import LostItemResponseSerializer
+from ..models import LostItem
+from ..serializers.response import LostItemResponseSerializer
 
 
 @api_view(['GET'])
