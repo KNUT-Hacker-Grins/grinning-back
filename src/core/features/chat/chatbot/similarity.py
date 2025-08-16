@@ -7,7 +7,7 @@ def _compose_text(doc: FoundItem) -> str:
     parts = [doc.title or "", doc.description or "", doc.category or "", doc.color or ""]
     return " ".join(parts)
 
-class RecommanderFoundItems:
+class FoundItemsRecommander:
     def __init__(self, query: str, top_k: int = 5):
         self.vec = TfidfVectorizer(min_df=1, ngram_range=(1, 2)) 
         self.analy_similarity_for_Tfidf(query, top_k)

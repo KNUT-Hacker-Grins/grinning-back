@@ -1,5 +1,5 @@
 from django.urls import path
-from views import ChatbotMessageView, ChatbotHealthView
+from .views import ChatbotMessageView, ChatbotHealthView
 
 urlpatterns = [
     path('message', ChatbotMessageView.as_view(), name='chatbot_message'),
