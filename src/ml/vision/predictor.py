@@ -12,7 +12,7 @@ from .image_utils import download_image
 
 # === 경로 설정 ===
 BASE_DIR = Path(__file__).resolve().parents[1]  
-WEIGHTS_REL = Path("vision/weights/lf-y8s-768-dv0-m1-fp32-pt-20250814.pt")  
+WEIGHTS_REL = Path("vision/models/lf-y8s-768-dv0-m1-fp32-pt-20250814.pt")  
 MODEL_PATH = BASE_DIR / WEIGHTS_REL
 
 # 가중치 존재 확인

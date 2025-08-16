@@ -1,8 +1,7 @@
-import os
 from google import genai  
+from config.settings import GEMINI_API_KEY
 
-API_KEY = os.getenv("GEMINI_API_KEY")
-if not API_KEY:
+if not GEMINI_API_KEY:
     raise RuntimeError("환경 변수 GEMINI_API_KEY가 없습니다.")
 
 CategoryEnum = [
@@ -17,7 +16,7 @@ ColorEnum = [
     "초록", "초록색", "회색", "노란", "노란색", "갈색", "미상"
 ]
 
-client = genai.Client(api_key=API_KEY)
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 SYSTEM_INSTRUCTIONS = """\
 아래 한국어 분실물 설명에서 category, color, raw를 추출하세요.
