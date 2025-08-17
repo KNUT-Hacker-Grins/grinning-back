@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 ALLOWED_HOSTS = [
+    "54.180.86.22",
     "cheetahsmiling.duckdns.org",
     ".render.com",
     "unit6-back-1.onrender.com", 
@@ -33,7 +34,7 @@ ALLOWED_HOSTS = [
 ]
 
 # 우리 프로젝트에서 사용할 User 모델은 accounts 앱에 있는 User 클래스야!
-AUTH_USER_MODEL = 'accounts.User'
+'core.features.accounts.User'
 
 # Application definition
 
