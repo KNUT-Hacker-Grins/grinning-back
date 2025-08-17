@@ -17,12 +17,13 @@ class FoundItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # 등록한 유저
     title = models.CharField(max_length=100)
     description = models.TextField()
+    category = models.JSONField(default=dict)
+    color = models.CharField(max_length=50, default="unknown")
     found_at = models.DateTimeField()
     found_location = models.CharField(max_length=200)
     latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
     longitude = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=True)
     image_urls = models.JSONField(default=list, null=True, blank=True)
-    category = models.JSONField(default=dict)
     status = models.CharField(
         max_length=20, 
         choices=STATUS_CHOICES, 
