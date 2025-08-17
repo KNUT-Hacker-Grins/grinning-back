@@ -1,6 +1,6 @@
 import uuid
-from .models import ChatSession
-from .state import ChatState
+from ..models import ChatSession
+from ..domain.state import ChatState
 
 def _ensure_session(session_id: str = ""):
     if not session_id:

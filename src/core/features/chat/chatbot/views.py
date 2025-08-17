@@ -3,11 +3,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import InquiryLog
-from .similarity import FoundItemsRecommander
+from .services.similarity import FoundItemsRecommander
 from .serializers import ChatRequestSerializer
-from .utils import _ensure_session
-from .state import ChatState
-from .reply import ChatReply
+from .services.session import _ensure_session
+from .domain.state import ChatState
+from .domain.reply import ChatReply
 from ml.llm.gemini_text2json import parse_item_by_genai 
 
 class ChatbotHealthView(APIView):
