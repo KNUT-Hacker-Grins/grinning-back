@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import InquiryLog
-from .services.similarity import FoundItemsRecommander
+from ml.nlp.similarity import LostItemsRecommander
 from .serializers import ChatRequestSerializer
 from .services.session import _ensure_session
 from .domain.state import ChatState
@@ -76,7 +76,7 @@ class ChatbotMessageView(APIView):
             InquiryLog.objects.create(session=session, message=message)
             meta = parse_item_by_genai(message)
             q = " ".join([meta.get("category",""), meta.get("color",""), meta.get("raw","")]).strip()
-            recs = FoundItemsRecommander(q, top_k=5)
+            recs = LostItemsRecommander(q, top_k=5)
 
             if recs:
                 return Response({
