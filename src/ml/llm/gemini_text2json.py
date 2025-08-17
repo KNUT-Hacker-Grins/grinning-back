@@ -42,7 +42,7 @@ SYSTEM_INSTRUCTIONS = """\
 - 필드는 category, color, raw 순서로 배치.
 """
 
-def parse_item_by_genai(text: str):
+def parse_item_by_genai(text: str) -> str:
     response = client.models.generate_content(
         model="gemini-2.5-flash",  # 정밀 우선이면 "gemini-2.5-pro"
         contents=[SYSTEM_INSTRUCTIONS, f"입력: {text}"],
@@ -83,7 +83,7 @@ def parse_item_by_genai(text: str):
     )
 
     return " ".join([
-            response.parsed.get("category",""), 
-            response.parsed.get("color",""), 
-            response.parsed.get("raw","")
-        ]).strip()
+        response.parsed.get("category",""), 
+        response.parsed.get("color",""), 
+        response.parsed.get("raw","")
+    ]).strip()
