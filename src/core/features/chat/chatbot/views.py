@@ -74,9 +74,8 @@ class ChatbotMessageView(APIView):
                 })
 
             InquiryLog.objects.create(session=session, message=message)
-            meta = parse_item_by_genai(message)
-            q = " ".join([meta.get("category",""), meta.get("color",""), meta.get("raw","")]).strip()
-            recs = LostItemsRecommander(q, top_k=5)
+            query = parse_item_by_genai(message)
+            recs = LostItemsRecommander(query, top_k=5)
 
             if recs:
                 return Response({
