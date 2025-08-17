@@ -1,4 +1,4 @@
-from google import genai  
+import google.generativeai as genai
 from config.settings import GEMINI_API_KEY
 
 if not GEMINI_API_KEY:
@@ -16,7 +16,7 @@ ColorEnum = [
     "초록", "초록색", "회색", "노란", "노란색", "갈색", "미상"
 ]
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
 
 SYSTEM_INSTRUCTIONS = """\
 아래 한국어 분실물 설명에서 category, color, raw를 추출하세요.

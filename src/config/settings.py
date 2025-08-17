@@ -23,7 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 ALLOWED_HOSTS = [
-    ".render.com", 
+    "cheetahsmiling.duckdns.org",
+    ".render.com",
     "unit6-back-1.onrender.com", 
     "unit6frontdx-2swg.vercel.app", 
     "unit6-front.vercel.app", 
