@@ -25,6 +25,14 @@ class YOLOManager:
             20: "필통", 21: "샤프", 22: "커터칼", 23: "샤프심통", 24: "자",
             25: "안경", 26: "캡/야구 모자", 27: "백팩", 28: "지갑",
         }
+    
+    CATEGORY_MAPPING = {
+        "보석_귀금속_시계": ["반지", "팔찌", "목걸이", "귀걸이", "아날로그손목시계"],
+        "전자기기": ["계산기", "마우스", "보조배터리", "무선이어폰", "스마트워치", "무선이어폰크래들", "무선헤드폰", "노트북", "태블릿", "태블릿펜", "USB메모리", "휴대폰"],
+        "문구류": ["연필", "볼펜", "지우개", "필통", "샤프", "커터칼", "샤프심통", "자"],
+        "피혁_잡화": ["지갑", "백팩", "안경", "캡/야구 모자"]
+        }
+
 
     # 모델 변수 초기화 
     _model = None
@@ -62,7 +70,16 @@ class YOLOManager:
         for box, conf, cls in zip(boxes, confidences, classes):
             cid = int(cls)  # ★ 정수 변환 중요
             name = YOLOManager.ITEMS_DICT.get(cid, f"unknown_{cid}")
+            
+            for category, items in YOLOManager.CATEGORY_MAPPING.items():
+                if any(name == item for item in items):
+                    category_name = category
+                    break
+                else:
+                    category_name = "기타"
+
             outputs.append({
+                "category": category_name,
                 "class_id": cid,
                 "class_name": name,
                 "bbox": [float(x) for x in box],  # x1,y1,x2,y2
