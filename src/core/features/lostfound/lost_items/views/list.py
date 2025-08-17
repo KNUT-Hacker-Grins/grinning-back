@@ -1,10 +1,12 @@
 from django.db.models import F
+from django.utils import timezone
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from ..models import LostItem, CategoryCount
+from ..models import LostItem
 from ..serializers import LostItemResponseSerializer
 from core.common.utils.responses import success_response
+from core.integrations.lost_insight.models import CategoryDailyCount
 from ml.nlp.similarity import LostItemsRecommander
 from ml.llm.gemini_text2json import parse_item_by_genai
 
@@ -71,7 +73,8 @@ def lost_items_list_by_search(request):
 
     # 3-2. 검색어에 따른 카테고리 검색 횟수 추가 
     category_key = query.split(" ")[0]
-    obj, _ = CategoryCount.objects.get_or_create(category=category_key)
+    today = timezone.now().date()
+    obj, _ = CategoryDailyCount.objects.get_or_create(category=category_key, date=today)
     obj.search_count = F("search_count") + 1
     obj.save(update_fields=["search_count"])
     obj.refresh_from_db()
