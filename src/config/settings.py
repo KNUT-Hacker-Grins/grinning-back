@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework_simplejwt",
+    "core.ai_gateway.image_classifier",
+    "core.ai_gateway.translation",
     "core.common",
     "core.features.accounts",
     "core.features.chat.chat",
@@ -54,10 +56,9 @@ INSTALLED_APPS = [
     "core.features.lostfound.found_items",
     "core.features.lostfound.lost_items",
     "core.features.lostfound.reports",
-    "core.integrations.uploads",
+    "core.integrations.lost_insight",
     "core.integrations.map_api",
-    "core.ai_gateway.image_classifier",
-    "core.ai_gateway.translation",
+    "core.integrations.uploads",
 ]
 
 
