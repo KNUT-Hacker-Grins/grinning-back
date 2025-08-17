@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/classify/', include('core.ai_gateway.image_classifier.urls')),
     path('api/translation/', include('core.ai_gateway.translation.urls')),
     path('api/chat/', include('core.features.chat.chat.urls')), 
-    # path('api/chatbot/', include('core.features.chat.chatbot.urls')), 
+    path('api/chatbot/', include('core.features.chat.chatbot.urls')), 
     path('api/', include('core.features.accounts.urls')),
     path('api/found-items/', include('core.features.lostfound.found_items.urls')), 
     path('api/lost-items/', include('core.features.lostfound.lost_items.urls')),

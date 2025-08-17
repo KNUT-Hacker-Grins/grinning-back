@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import FoundItem
 from core.common.error.error import ImageClassificationError 
 from core.features.accounts.models import User
-from ml.vision.predictor import predict_yolo
+from ml.vision.predictor import YOLOManager
 
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,7 +24,7 @@ class FoundItemSerializer(serializers.ModelSerializer):
         if image_urls and len(image_urls) > 0: # Check if image_urls is not empty
             try:
                 # Use the first image URL for prediction
-                data = predict_yolo(image_urls[0])
+                data = YOLOManager().predict_yolo(image_urls[0])
                 validated_data = data if data else []
             except ImageClassificationError as e:
                 print(f"[이미지 분류 오류] {e}") # Log the error
