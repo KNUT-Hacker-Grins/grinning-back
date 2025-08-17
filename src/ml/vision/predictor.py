@@ -16,13 +16,8 @@ class YOLOManager:
     WEIGHTS_REL = Path("vision/models/lf-y8s-768-dv0-m1-fp32-pt-20250814.pt")  
     MODEL_PATH = BASE_DIR / WEIGHTS_REL
 
-    def __init__(self):
-        # 가중치 존재 확인
-        if not self.MODEL_PATH.exists():
-            raise FileNotFoundError(f"YOLO weights not found: {self.MODEL_PATH}")
-
-        # === 클래스 매핑 ===
-        item_dict = {
+    # 클래스 매핑 
+    ITEMS_DICT = {
             0: "계산기", 1: "마우스", 2: "보조배터리", 3: "무선이어폰", 4: "스마트워치",
             5: "노트북", 6: "태블릿펜", 7: "태블릿", 8: "무선헤드폰", 9: "USB메모리",
             10: "휴대폰", 11: "무선이어폰크래들", 12: "반지", 13: "팔찌", 14: "목걸이",
@@ -31,16 +26,25 @@ class YOLOManager:
             25: "안경", 26: "캡/야구 모자", 27: "백팩", 28: "지갑",
         }
 
+    # 모델 변수 초기화 
+    _model = None
+
+    def __init__(self):
+        # 가중치 존재 확인
+        if not self.MODEL_PATH.exists():
+            raise FileNotFoundError(f"YOLO weights not found: {self.MODEL_PATH}")
+
         # CPU 스레드 최소화 (추가)
         torch.set_num_threads(1)
         torch.set_num_interop_threads(1)
 
         # === 모델 로드 ===
         # Ultralytics는 device를 predict에서 지정하는 것으로 충분. .to("cpu") 생략 가능
-        self.model = YOLO(str(self.MODEL_PATH))
+        if not self._model:
+            self._model = YOLO(str(self.MODEL_PATH))
 
     @staticmethod
-    def _process_single_result(self, result):
+    def _process_single_result(result):
         """
         Ultralytics Results -> list[dict]
         dict: { class_name, bbox[x1,y1,x2,y2], conf }
@@ -57,7 +61,7 @@ class YOLOManager:
         outputs = []
         for box, conf, cls in zip(boxes, confidences, classes):
             cid = int(cls)  # ★ 정수 변환 중요
-            name = self.item_dict.get(cid, f"unknown_{cid}")
+            name = YOLOManager.ITEMS_DICT.get(cid, f"unknown_{cid}")
             outputs.append({
                 "class_id": cid,
                 "class_name": name,
@@ -71,8 +75,6 @@ class YOLOManager:
         이미지 경로를 넣으면 감지 결과를 리스트로 반환
         - t3.micro(1GB) 대응: imgsz<=512, batch=1, 스레드=1
         """
-        # 경로 그대로 넘기는 게 메모리상 유리
-
         if isinstance(param, str) and param.startswith("http"):
             img = download_image(param)
         elif hasattr(param, "read"):
@@ -80,7 +82,7 @@ class YOLOManager:
         else:
             raise ValueError("지원하지 않는 이미지 입력 형식입니다.")
 
-        results = self.model.predict(
+        results = self._model.predict(
             source=img,
             imgsz=imgsz,
             device="cpu",
