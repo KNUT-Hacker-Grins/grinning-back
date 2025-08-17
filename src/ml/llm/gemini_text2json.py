@@ -82,8 +82,8 @@ def parse_item_by_genai(text: str):
         },
     )
 
-    if response.parsed:
-        return response.parsed  
-    else:
-        import json
-        return json.loads(response.text)
+    return " ".join([
+            response.parsed.get("category",""), 
+            response.parsed.get("color",""), 
+            response.parsed.get("raw","")
+        ]).strip()

@@ -3,20 +3,20 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from core.features.lostfound.lost_items.models import LostItem
 
-def _compose_text(doc: LostItem) -> str:
-    parts = [doc.title or "", doc.description or "", doc.category or "", doc.color or ""]
-    return " ".join(parts)
-
 class LostItemsRecommander:
-    def __init__(self, query: str, top_k: int = 5):
+    def __init__(self, items, query: str, top_k: int = 5):
         self.vec = TfidfVectorizer(min_df=1, ngram_range=(1, 2)) 
-        self.analy_similarity_for_Tfidf(query, top_k)
+        self.analy_similarity_for_Tfidf(items, query, top_k)
 
-    def analy_similarity_for_Tfidf(self, query, top_k) -> List[Dict]:
-        items = list(LostItem.objects.order_by("-created_at")[:2000])  # 최근 2000건에서 추천
+    @staticmethod
+    def _compose_text(doc: LostItem) -> str:
+        parts = [doc.title or "", doc.description or "", doc.category or "", doc.color or ""]
+        return " ".join(parts)
+
+    def analy_similarity_for_Tfidf(self, items, query, top_k) -> List[Dict]:
         if not items:
             return []
-        corpus = [_compose_text(it) for it in items]
+        corpus = [self._compose_text(it) for it in items]
         
         X = self.vec.fit_transform(corpus)
         qv = self.vec.transform([query])
