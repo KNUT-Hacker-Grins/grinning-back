@@ -20,7 +20,7 @@ class LostItem(models.Model):
     title = models.CharField(max_length=100)  # 분실물 제목
     description = models.TextField()  # 상세 설명
     category = models.JSONField(default=list)
-    color = models.CharField(max_length=30)
+    color = models.CharField(max_length=50, default="unknown")
     lost_at = models.DateTimeField()  # 분실한 날짜/시간
     lost_location = models.CharField(max_length=200)  # 분실한 장소
     latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
@@ -42,17 +42,3 @@ class LostItem(models.Model):
         user_name = self.user.name if self.user and hasattr(self.user, 'name') else "Unknown User"
         return f"{self.title} - {user_name}"
     
-class CategoryCount(models.Model):
-    CATEGORY_CHOICES = [
-        ("jewelry", "보석_귀금속_시계"),
-        ("electronics", "전자기기"),
-        ("stationery", "문구류"),
-        ("fashion", "피혁_잡화"),
-        ("etc", "기타"),
-    ]
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, unique=True)
-    search_count = models.BigIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)  
-
-    def __str__(self):
-        return f"{self.category}: {self.category_count}"

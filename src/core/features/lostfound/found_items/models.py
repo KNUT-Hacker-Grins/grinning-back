@@ -18,7 +18,7 @@ class FoundItem(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     category = models.JSONField(default=dict)
-    color = models.CharField(max_length=30)
+    color = models.CharField(max_length=50, default="unknown")
     found_at = models.DateTimeField()
     found_location = models.CharField(max_length=200)
     latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
