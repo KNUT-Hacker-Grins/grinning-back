@@ -1,19 +1,19 @@
 from typing import List, Dict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from core.features.lostfound.found_items.models import FoundItem
+from core.features.lostfound.lost_items.models import LostItem
 
-def _compose_text(doc: FoundItem) -> str:
+def _compose_text(doc: LostItem) -> str:
     parts = [doc.title or "", doc.description or "", doc.category or "", doc.color or ""]
     return " ".join(parts)
 
-class FoundItemsRecommander:
+class LostItemsRecommander:
     def __init__(self, query: str, top_k: int = 5):
         self.vec = TfidfVectorizer(min_df=1, ngram_range=(1, 2)) 
         self.analy_similarity_for_Tfidf(query, top_k)
 
     def analy_similarity_for_Tfidf(self, query, top_k) -> List[Dict]:
-        items = list(FoundItem.objects.order_by("-created_at")[:2000])  # 최근 2000건에서 추천
+        items = list(LostItem.objects.order_by("-created_at")[:2000])  # 최근 2000건에서 추천
         if not items:
             return []
         corpus = [_compose_text(it) for it in items]
