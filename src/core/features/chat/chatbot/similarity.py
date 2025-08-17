@@ -1,7 +1,7 @@
 from typing import List, Dict
-from .models import FoundItem
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from core.features.lostfound.found_items.models import FoundItem
 
 def _compose_text(doc: FoundItem) -> str:
     parts = [doc.title or "", doc.description or "", doc.category or "", doc.color or ""]
