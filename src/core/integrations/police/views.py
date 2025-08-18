@@ -18,7 +18,6 @@ class PoliceFoundItemsView(View):
         }
 
         try:
-            # Enable streaming for memory efficiency
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
             }
@@ -31,8 +30,18 @@ class PoliceFoundItemsView(View):
             )
             response.raise_for_status()
 
+            # --- Start Debugging ---
+            # Read the first 500 bytes to check if it's XML or HTML
+            response_start_bytes = response.raw.read(500)
+            print(f"Police API Raw Response Snippet: {response_start_bytes.decode('utf-8', errors='ignore')}")
+            # We need to combine the peeked bytes with the rest of the stream
+            from io import BytesIO
+            response.raw.decode_content = True
+            full_response_stream = BytesIO(response_start_bytes + response.raw.read())
+            # --- End Debugging ---
+
             # Use iterparse for memory-efficient XML parsing
-            context = ET.iterparse(response.raw, events=('end',))
+            context = ET.iterparse(full_response_stream, events=('end',))
             items = []
             total_count = 0
             
