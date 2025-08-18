@@ -7,7 +7,6 @@ from decouple import config
 class PoliceFoundItemsView(View):
     def get(self, request):
         try:
-            # .env 파일에서 API 키를 안전하게 불러옵니다.
             api_key = config('POLICE_API_KEY')
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': 'POLICE_API_KEY가 .env 파일에 설정되지 않았습니다.'}, status=500)
@@ -24,15 +23,31 @@ class PoliceFoundItemsView(View):
                 params=params,
                 timeout=10
             )
-            response.raise_for_status()
+            
+            print(f"Police API Response Status Code: {response.status_code}") # 상태 코드 출력
+            print(f"Police API Raw Response Content: {response.content.decode('utf-8')}") # 원본 내용 출력
+
+            response.raise_for_status() # 200 OK가 아니면 여기서 예외 발생
 
             root = ET.fromstring(response.content)
             
-            # API 에러 응답 처리 (공공데이터포털 표준)
+            # 공공데이터포털 표준 오류 응답 XML 구조에 맞춰 파싱
+            cmm_msg_header = root.find('.//cmmMsgHeader')
+            if cmm_msg_header is not None:
+                return_reason_code = cmm_msg_header.findtext('returnReasonCode')
+                return_auth_msg = cmm_msg_header.findtext('returnAuthMsg')
+                err_msg = cmm_msg_header.findtext('errMsg')
+
+                if return_reason_code and return_reason_code != '00':
+                    error_message = f"API Error: {err_msg or return_auth_msg} (Code: {return_reason_code})"
+                    return JsonResponse({'status': 'error', 'message': error_message}, status=400)
+            
+            # 정상 응답의 resultCode 확인 (이전 로직 유지)
             result_code = root.findtext('.//resultCode')
-            if result_code != '00':
+            if result_code is not None and result_code != '00':
                 result_msg = root.findtext('.//resultMsg')
-                return JsonResponse({'status': 'error', 'message': f'API Error: {result_msg} (Code: {result_code})'}, status=400)
+                error_message = f"API Error: {result_msg} (Code: {result_code})"
+                return JsonResponse({'status': 'error', 'message': error_message}, status=400)
 
             items = []
             for item_node in root.findall('.//item'):
@@ -63,4 +78,4 @@ class PoliceFoundItemsView(View):
         except requests.exceptions.RequestException as e:
             return JsonResponse({'status': 'error', 'message': f'API request failed: {e}'}, status=500)
         except ET.ParseError:
-            return JsonResponse({'status': 'error', 'message': 'Failed to parse XML response'}, status=500)
+            return JsonResponse({'status': 'error', 'message': 'Failed to parse XML response (possibly HTML or malformed XML)'}, status=500)
