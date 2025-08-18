@@ -57,8 +57,8 @@ class PoliceFoundItemsView(View):
                     'fdPrdtNm': item_node.findtext('fdPrdtNm'),
                     'fdYmd': item_node.findtext('fdYmd'),
                     'fdFilePathImg': item_node.findtext('fdFilePathImg'),
-                    'prdtClCd01': item_node.findtext('prdtClCd01'),
-                    'prdtClCd02': item_node.findtext('prdtClCd02'),
+                    'prdtClNm': item_node.findtext('prdtClNm'),
+                    'clrNm': item_node.findtext('clrNm'),
                     'fdSn': item_node.findtext('fdSn'),
                 }
                 items.append(item_data)
