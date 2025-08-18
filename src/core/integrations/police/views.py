@@ -3,6 +3,20 @@ import xml.etree.ElementTree as ET
 from django.http import JsonResponse
 from django.views import View
 from decouple import config
+import gzip
+
+class PoliceFoundItemsView(View):
+    def get(self, request):
+        try:
+            api_key = config('POLICE_API_KEY')
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': 'POLICE_API_KEY가 .env 파일에 설정되지 않았습니다.'}, status=500)
+
+        params = {
+            'serviceKey': api_key,
+            'pageNo': request.GET.get('pageNo', '1'),
+            'numOfRows': request.GET.get('numOfRows', '10'),
+        }
 
         try:
             headers = {
@@ -56,4 +70,4 @@ from decouple import config
         except requests.exceptions.RequestException as e:
             return JsonResponse({'status': 'error', 'message': f'API request failed: {e}'}, status=500)
         except ET.ParseError:
-            return JsonResponse({'status': 'error', 'message': 'Failed to parse XML response (possibly HTML or malformed XML)'}, status=500)
+            return JsonResponse({'status': 'error', 'message': 'Failed to parse XML response (server sent invalid XML)'}, status=500)
