@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "src.config.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -20,17 +20,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-
-python src/manage.py startapp reports
-python src/manage.py makemigrations 
-python src/manage.py migrate
-python src/manage.py createsuperuser
-python src/manage.py runserver
-
-from apps.accounts.models import User
-user_count = User.objects.count()
-print(user_count)
-
-"""
