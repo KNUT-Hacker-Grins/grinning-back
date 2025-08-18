@@ -4,21 +4,6 @@ from django.http import JsonResponse
 from django.views import View
 from decouple import config
 
-import gzip
-
-class PoliceFoundItemsView(View):
-    def get(self, request):
-        try:
-            api_key = config('POLICE_API_KEY')
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': 'POLICE_API_KEY가 .env 파일에 설정되지 않았습니다.'}, status=500)
-
-        params = {
-            'serviceKey': api_key,
-            'pageNo': request.GET.get('pageNo', '1'),
-            'numOfRows': request.GET.get('numOfRows', '10'),
-        }
-
         try:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
@@ -31,14 +16,8 @@ class PoliceFoundItemsView(View):
             )
             response.raise_for_status()
 
-            try:
-                decompressed_content = gzip.decompress(response.content)
-            except gzip.BadGzipFile as e:
-                print(f"[GZIP DECOMPRESSION FAILED]: {e}")
-                print(f"[RAW RESPONSE CONTENT (first 500 bytes)]: {response.content[:500]}")
-                return JsonResponse({'status': 'error', 'message': 'Failed to decompress API response.'}, status=500)
-
-            root = ET.fromstring(decompressed_content)
+            # The server sends a wrong Content-Encoding header, so we parse the raw content directly.
+            root = ET.fromstring(response.content)
             
             result_code = root.findtext('.//resultCode')
             if result_code is not None and result_code != '00':
