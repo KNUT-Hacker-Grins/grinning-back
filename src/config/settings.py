@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "core.integrations.lost_insight",
     "core.integrations.map_api",
     "core.integrations.uploads",
+    "core.integrations.police.apps.PoliceApiConfig",
 ]
 
 

@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/lost-insight/', include('core.integrations.lost_insight.urls')),
     path('api/map/', include('core.integrations.map_api.urls')),
     path('api/upload/', include('core.integrations.uploads.urls')),
+    path('api/police/', include('core.integrations.police.urls')),
 ]
 
 # 개발환경에서만 미디어 파일 서빙
