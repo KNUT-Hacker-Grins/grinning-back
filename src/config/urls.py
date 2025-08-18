@@ -14,7 +14,7 @@ urlpatterns = [
     path('api/found-items/', include('core.features.lostfound.found_items.urls')), 
     path('api/lost-items/', include('core.features.lostfound.lost_items.urls')),
     path('api/', include('core.features.lostfound.reports.urls')),
-    path('api/lost-insight/', include('core.integrations.lost_insight.urls')),
+    path('api/stats/', include('core.integrations.lost_insight.urls')),
     path('api/map/', include('core.integrations.map_api.urls')),
     path('api/upload/', include('core.integrations.uploads.urls')),
 ]
