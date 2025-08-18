@@ -21,7 +21,7 @@ class PoliceFoundItemsView(View):
             response = requests.get(
                 'http://apis.data.go.kr/1320000/LosfundInfoInqireService/getLosfundInfoAccToClAreaPd',
                 params=params,
-                timeout=10
+                timeout=60
             )
             
             print(f"Police API Response Status Code: {response.status_code}") # 상태 코드 출력
