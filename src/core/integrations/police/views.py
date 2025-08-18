@@ -64,7 +64,9 @@ class PoliceFoundItemsView(View):
                 items.append(item_data)
             
             total_count_node = root.find('.//totalCount')
-            total_count = int(total_count_node.text) if total_count_node is not None else 0
+            total_count = 0
+            if total_count_node is not None and total_count_node.text and total_count_node.text.isdigit():
+                total_count = int(total_count_node.text)
 
             return JsonResponse({
                 'status': 'success',
