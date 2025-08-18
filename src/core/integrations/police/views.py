@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.views import View
 from decouple import config
 
+import gzip
+
 class PoliceFoundItemsView(View):
     def get(self, request):
         try:
@@ -25,46 +27,43 @@ class PoliceFoundItemsView(View):
                 'http://apis.data.go.kr/1320000/LosfundInfoInqireService/getLosfundInfoAccToClAreaPd',
                 params=params,
                 headers=headers,
-                timeout=60,
-                stream=True
+                timeout=120
             )
             response.raise_for_status()
 
-            # --- Start Debugging ---
-            # Read the first 500 bytes to check if it's XML or HTML
-            response_start_bytes = response.raw.read(500)
-            print(f"Police API Raw Response Snippet: {response_start_bytes.decode('utf-8', errors='ignore')}")
-            # We need to combine the peeked bytes with the rest of the stream
-            from io import BytesIO
-            response.raw.decode_content = True
-            full_response_stream = BytesIO(response_start_bytes + response.raw.read())
-            # --- End Debugging ---
+            try:
+                decompressed_content = gzip.decompress(response.content)
+            except gzip.BadGzipFile as e:
+                print(f"[GZIP DECOMPRESSION FAILED]: {e}")
+                print(f"[RAW RESPONSE CONTENT (first 500 bytes)]: {response.content[:500]}")
+                return JsonResponse({'status': 'error', 'message': 'Failed to decompress API response.'}, status=500)
 
-            # Use iterparse for memory-efficient XML parsing
-            context = ET.iterparse(full_response_stream, events=('end',))
-            items = []
-            total_count = 0
+            root = ET.fromstring(decompressed_content)
             
-            for _, elem in context:
-                if elem.tag == 'item':
-                    items.append({
-                        'atcId': elem.findtext('atcId'),
-                        'depPlace': elem.findtext('depPlace'),
-                        'fdPrdtNm': elem.findtext('fdPrdtNm'),
-                        'fdYmd': elem.findtext('fdYmd'),
-                        'fdFilePathImg': elem.findtext('fdFilePathImg'),
-                        'prdtClNm': elem.findtext('prdtClNm'),
-                        'clrNm': elem.findtext('clrNm'),
-                        'fdSn': elem.findtext('fdSn'),
-                    })
-                elif elem.tag == 'totalCount':
-                    if elem.text and elem.text.isdigit():
-                        total_count = int(elem.text)
-                elif elem.tag == 'resultCode' and elem.text != '00':
-                    return JsonResponse({'status': 'error', 'message': f"API returned error code: {elem.text}"}, status=400)
-                
-                # Free memory
-                elem.clear()
+            result_code = root.findtext('.//resultCode')
+            if result_code is not None and result_code != '00':
+                result_msg = root.findtext('.//resultMsg')
+                error_message = f"API Error: {result_msg} (Code: {result_code})"
+                return JsonResponse({'status': 'error', 'message': error_message}, status=400)
+
+            items = []
+            for item_node in root.findall('.//item'):
+                item_data = {
+                    'atcId': item_node.findtext('atcId'),
+                    'depPlace': item_node.findtext('depPlace'),
+                    'fdPrdtNm': item_node.findtext('fdPrdtNm'),
+                    'fdYmd': item_node.findtext('fdYmd'),
+                    'fdFilePathImg': item_node.findtext('fdFilePathImg'),
+                    'prdtClNm': item_node.findtext('prdtClNm'),
+                    'clrNm': item_node.findtext('clrNm'),
+                    'fdSn': item_node.findtext('fdSn'),
+                }
+                items.append(item_data)
+            
+            total_count_node = root.find('.//totalCount')
+            total_count = 0
+            if total_count_node is not None and total_count_node.text and total_count_node.text.isdigit():
+                total_count = int(total_count_node.text)
 
             return JsonResponse({
                 'status': 'success',
