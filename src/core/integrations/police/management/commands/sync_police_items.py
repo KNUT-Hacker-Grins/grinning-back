@@ -32,7 +32,7 @@ class Command(BaseCommand):
             }
 
             try:
-                response = requests.get(base_url, params=params, timeout=60)
+                response = requests.get(base_url, params=params, timeout=600)
                 response.raise_for_status() # HTTP 오류 발생 시 예외 발생
 
                 root = ET.fromstring(response.content)
