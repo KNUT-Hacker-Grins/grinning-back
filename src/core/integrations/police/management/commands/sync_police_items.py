@@ -6,6 +6,8 @@ from datetime import datetime
 
 from core.integrations.police.models import PoliceFoundItem # 새로 정의한 모델 임포트
 
+import traceback
+
 class Command(BaseCommand):
     help = 'Fetches police found items from the external API and saves them to the database.'
 
@@ -97,7 +99,7 @@ class Command(BaseCommand):
                     break
 
             except requests.exceptions.RequestException as e:
-                self.stdout.write(self.style.ERROR(f"API request failed: {e}"))
+                self.stdout.write(self.style.ERROR(f"API request failed: {e}\n{traceback.format_exc()}"))
                 break
             except ET.ParseError:
                 self.stdout.write(self.style.ERROR('Failed to parse XML response.'))
