@@ -1,9 +1,12 @@
+import requests
+import xml.etree.ElementTree as ET
 from django.http import JsonResponse
 from django.views import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import PoliceFoundItem
 from .serializers import PoliceFoundItemSerializer
+
 
 class PoliceFoundItemsView(View):
     def get(self, request):
