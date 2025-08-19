@@ -1,5 +1,11 @@
 from django.urls import path
-from .views import social_login, google_callback, kakao_callback, login_password, register_user
+from .views import (
+    social_login, 
+    google_callback, 
+    kakao_callback, 
+    login_password, 
+    register_user
+)
 from .views.profile import UserProfileView
 from rest_framework_simplejwt.views import TokenRefreshView, TokenBlacklistView # TokenBlacklistView 임포트
 

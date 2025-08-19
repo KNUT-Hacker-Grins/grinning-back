@@ -1,13 +1,14 @@
 import logging 
 from config import settings
 from urllib.parse import urlencode
+from config import settings
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
-from core.common.utils.responses import error_response
+from core.common.utils.responses import error_response, success_response
 from ..utils import GoogleOAuth, KakaoOAuth
 
 User = get_user_model()
@@ -54,22 +55,23 @@ def google_callback(request):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        base_url = 'https://unit6-front.vercel.app/login/callback'
-        query_params = urlencode({'access': access_token, 'refresh': refresh_token})
-        redirect_url = f'{base_url}?{query_params}'
+        if settings.DEBUG:
+            return success_response(data={
+                "access": access_token,
+                "refresh": refresh_token,
+                "user": {
+                    "id": user.social_id,
+                    "email": user.email,
+                    "name": user.name,
+                    "provider": user_info["provider"]
+                }
+            })
+        else:    
+            base_url = 'https://unit6-front.vercel.app/login/callback'
+            query_params = urlencode({'access': access_token, 'refresh': refresh_token})
+            redirect_url = f'{base_url}?{query_params}'
 
-        return redirect(redirect_url)
-
-        # return JsonResponse({
-        #     "access": access_token,
-        #     "refresh": refresh_token,
-        #     "user": {
-        #         "id": user.social_id,
-        #         "email": user.email,
-        #         "name": user.name,
-        #         "provider": user_info["provider"]
-        #     }
-        # })
+            return redirect(redirect_url)
 
     except Exception as e:
         logger.exception(f"Google 로그인 실패: {e}") # 상세 에러 로깅
