@@ -1,14 +1,14 @@
 from django.utils import timezone
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from .models import InquiryLog
-from ml.nlp.similarity import LostItemsRecommander
 from .serializers import ChatRequestSerializer
 from .services.session import _ensure_session
 from .domain.state import ChatState
 from .domain.reply import ChatReply
-from ml.llm.gemini_text2json import parse_item_by_genai 
+from ml.llm.gemini import GeminiService  
+from ml.nlp.similarity import LostItemsRecommander
 
 class ChatbotHealthView(APIView):
     def get(self, request):
@@ -74,7 +74,7 @@ class ChatbotMessageView(APIView):
                 })
 
             InquiryLog.objects.create(session=session, message=message)
-            query = parse_item_by_genai(message)
+            query = GeminiService.call_gemini_for_parsing_text(message)
             recs = LostItemsRecommander(query, top_k=5)
 
             if recs:
