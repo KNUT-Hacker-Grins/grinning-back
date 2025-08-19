@@ -100,3 +100,4 @@ ultralytics==8.3.179
 ultralytics-thop==2.0.15
 uritemplate==4.2.0
 urllib3==2.5.0
+sentencepiece
