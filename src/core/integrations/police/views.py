@@ -1,73 +1,33 @@
-import requests
-import xml.etree.ElementTree as ET
 from django.http import JsonResponse
 from django.views import View
-from decouple import config
-import gzip
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from .models import PoliceFoundItem
+from .serializers import PoliceFoundItemSerializer
 
 class PoliceFoundItemsView(View):
     def get(self, request):
-        try:
-            api_key = config('POLICE_API_KEY')
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': 'POLICE_API_KEY가 .env 파일에 설정되지 않았습니다.'}, status=500)
+        page_no = request.GET.get('pageNo', '1')
+        num_of_rows = request.GET.get('numOfRows', '10')
 
-        params = {
-            'serviceKey': api_key,
-            'pageNo': request.GET.get('pageNo', '1'),
-            'numOfRows': request.GET.get('numOfRows', '10'),
-        }
+        queryset = PoliceFoundItem.objects.all().order_by('-fdYmd', '-atcId')
+
+        paginator = Paginator(queryset, num_of_rows)
 
         try:
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+            items = paginator.page(page_no)
+        except PageNotAnInteger:
+            items = paginator.page(1)
+        except EmptyPage:
+            items = paginator.page(paginator.num_pages)
+
+        serializer = PoliceFoundItemSerializer(items, many=True)
+
+        return JsonResponse({
+            'status': 'success',
+            'data': {
+                'items': serializer.data,
+                'total': paginator.count,
+                'page': int(page_no),
             }
-            response = requests.get(
-                'http://apis.data.go.kr/1320000/LosfundInfoInqireService/getLosfundInfoAccToClAreaPd',
-                params=params,
-                headers=headers,
-                timeout=120
-            )
-            response.raise_for_status()
-
-            # The server sends a wrong Content-Encoding header, so we parse the raw content directly.
-            root = ET.fromstring(response.content)
-            
-            result_code = root.findtext('.//resultCode')
-            if result_code is not None and result_code != '00':
-                result_msg = root.findtext('.//resultMsg')
-                error_message = f"API Error: {result_msg} (Code: {result_code})"
-                return JsonResponse({'status': 'error', 'message': error_message}, status=400)
-
-            items = []
-            for item_node in root.findall('.//item'):
-                item_data = {
-                    'atcId': item_node.findtext('atcId'),
-                    'depPlace': item_node.findtext('depPlace'),
-                    'fdPrdtNm': item_node.findtext('fdPrdtNm'),
-                    'fdYmd': item_node.findtext('fdYmd'),
-                    'fdFilePathImg': item_node.findtext('fdFilePathImg'),
-                    'prdtClNm': item_node.findtext('prdtClNm'),
-                    'clrNm': item_node.findtext('clrNm'),
-                    'fdSn': item_node.findtext('fdSn'),
-                }
-                items.append(item_data)
-            
-            total_count_node = root.find('.//totalCount')
-            total_count = 0
-            if total_count_node is not None and total_count_node.text and total_count_node.text.isdigit():
-                total_count = int(total_count_node.text)
-
-            return JsonResponse({
-                'status': 'success',
-                'data': {
-                    'items': items,
-                    'total': total_count,
-                    'page': int(params['pageNo']),
-                }
-            })
-
-        except requests.exceptions.RequestException as e:
-            return JsonResponse({'status': 'error', 'message': f'API request failed: {e}'}, status=500)
-        except ET.ParseError:
-            return JsonResponse({'status': 'error', 'message': 'Failed to parse XML response (server sent invalid XML)'}, status=500)
+        })
