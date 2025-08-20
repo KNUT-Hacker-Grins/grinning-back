@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 # 기존 urlpatterns
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api/classify/', include('core.ai_gateway.image_classifier.urls')),
+    path('api/classify/', include('core.ai_gateway.urls')),
     path('api/translation/', include('core.ai_gateway.translation.urls')),
     path('api/chat/', include('core.features.chat.chat.urls')), 
     path('api/chatbot/', include('core.features.chat.chatbot.urls')), 
