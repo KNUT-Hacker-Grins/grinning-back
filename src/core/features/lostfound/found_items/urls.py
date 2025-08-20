@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     FoundItemCreateView, FoundItemListView, FoundItemDetailView,
     FoundItemUpdateView, FoundItemDeleteView, FoundItemStatusUpdateView,
-    AdminFoundItemListView
+    AdminFoundItemListView, AdminFoundItemDeleteView
 )
 
 urlpatterns = [
@@ -12,5 +12,6 @@ urlpatterns = [
     path('<int:id>/', FoundItemDetailView.as_view(), name='founditem_detail'),
     path('<int:id>/edit', FoundItemUpdateView.as_view(), name='founditem_update'),
     path('<int:id>/delete', FoundItemDeleteView.as_view(), name='founditem_delete'),
+    path('<int:id>/delete/admin', AdminFoundItemDeleteView.as_view(), name='admin_founditem_delete'),
     path('<int:id>/status', FoundItemStatusUpdateView.as_view(), name='founditem_status_update'),
 ]
