@@ -25,6 +25,7 @@ class ChatReply:
     유사분실물찾지못함 = "유사한 항목을 찾지 못했어요. '🔍 검색하기'를 눌러 직접 검색해 보시겠어요?" 
     기타문의내용작성 = "문의 내용을 작성해 주세요."
     기타문의접수완료 = "문의가 접수되었습니다. 빠르게 확인하겠습니다. 또 도와드릴까요?"
+    게시글작성이동 = "게시글을 작성하기 위해 이동합니다."
     오류발생 = "오류가 발생했습니다. 다시 시도해주세요."
     
 WELCOME_CHOICES = ["분실물 찾기", "분실물 신고", "기타 문의"]
@@ -135,25 +136,25 @@ class ChatBotHandler:
     def _handle_move_to_article_state(self):
         if self.message:
             article_infor = GeminiService.call_gemini_for_auto_posting(self.message)
-            self.response = self._send_response(data=article_infor)
+            self.response = self._send_response(reply=ChatReply.게시글작성이동, data=article_infor)
             self.session.state = ChatState.IDLE
             self.session.save(update_fields=["state", "updated_at"])
         else:
-            self.response = self._send_response(ChatReply.특징입력대기)
+            self.response = self._send_response(reply=ChatReply.특징입력대기)
 
     def _handle_other_state(self):
         if self.message:
             InquiryLog.objects.create(session=self.session, message=self.message, extra={"type":"etc"})
-            self.response = self._send_response(ChatReply.기타문의접수완료, WELCOME_CHOICES, [])
+            self.response = self._send_response(reply=ChatReply.기타문의접수완료, choices=WELCOME_CHOICES)
             self.session.state = ChatState.IDLE
             self.session.save(update_fields=["state", "updated_at"])
         else:
-            self.response = self._send_response(ChatReply.기타문의내용작성)
+            self.response = self._send_response(reply=ChatReply.기타문의내용작성)
 
     def _send_response(self, reply, choices=[], recommendations=[], data={}):
         return Response({
             "session_id": self.session.session_id,
-            "state": self.self.session.state,
+            "state": self.session.state,
             "reply": reply,
             "choices": choices,
             "recommendations": recommendations,
