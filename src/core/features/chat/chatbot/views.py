@@ -8,13 +8,13 @@ from .serializers import ChatRequestSerializer
 from .session import _ensure_session
 from .chatbot_handler import ChatBotHandler
 
+
 class ChatbotHealthView(APIView):
     def get(self, request):
         return Response({"ok": True, "time": timezone.now().isoformat()})
 
-    
+
 class ChatbotMessageView(APIView):
-    
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
@@ -33,7 +33,8 @@ class ChatbotMessageView(APIView):
                 "state": reply_data.get("state"),
                 "reply": reply_data.get("reply"),
                 "choices": reply_data.get("choices", []),
-                "recommendations": reply_data.get("recommendations", [])
+                "recommendations": reply_data.get("recommendations", []),
+                "data": reply_data.get("data", {})
             })
         
         except Exception as e:
