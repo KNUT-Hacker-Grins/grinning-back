@@ -1,3 +1,6 @@
-from .llm.gemini import parse_item_by_genai
+from .llm.gemini import GeminiService
 from .nlp.translator import translate_text
 from .vision.predictor import YOLOManager
+
+def parse_item_by_genai(message: str) -> str:
+    return GeminiService.call_gemini_for_parsing_text(message)
