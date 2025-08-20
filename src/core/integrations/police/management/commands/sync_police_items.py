@@ -26,6 +26,10 @@ class Command(BaseCommand):
         items_created = 0
         items_updated = 0
 
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+        }
+
         while True:
             params = {
                 'serviceKey': api_key,
@@ -33,8 +37,11 @@ class Command(BaseCommand):
                 'numOfRows': num_of_rows,
             }
 
+            self.stdout.write(self.style.NOTICE(f"Requesting URL: {base_url}?{requests.compat.urlencode(params)}"))
+            self.stdout.write(self.style.NOTICE(f"Request Headers: {headers}"))
+
             try:
-                response = requests.get(base_url, params=params, timeout=600)
+                response = requests.get(base_url, params=params, headers=headers, timeout=600)
                 response.raise_for_status() # HTTP 오류 발생 시 예외 발생
 
                 root = ET.fromstring(response.content)
