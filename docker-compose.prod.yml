@@ -1,0 +1,27 @@
+services:
+  web:
+    image: ghcr.io/SejongDxUnit6/Unit6-back/web:${GIT_SHA}
+    # build: 는 prod에선 쓰지 않음 (이미지 받아오기)
+    env_file: .env
+    environment:
+      DATABASE_URL: sqlite:////app/data/db.sqlite3
+    volumes:
+      - data:/app/data
+    restart: unless-stopped
+    networks: [appnet]
+
+  nginx:
+    image: nginx:1.27
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on: [web]
+    restart: unless-stopped
+    networks: [appnet]
+
+volumes:
+  data:
+
+networks:
+  appnet:

@@ -22,9 +22,6 @@ src/classifier/data/
 # environments
 venv/
 
-# translations model
-hf_models/
-
 # migations 
 /**/**/migrations
 

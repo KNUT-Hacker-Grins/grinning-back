@@ -1,5 +1,4 @@
 from .llm.gemini import GeminiService
-from .nlp.translator import translate_text
 from .vision.predictor import YOLOManager
 
 def parse_item_by_genai(message: str) -> str:
