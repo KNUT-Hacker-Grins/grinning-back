@@ -1,6 +1,6 @@
 services:
   web:
-    image: ghcr.io/SejongDxUnit6/Unit6-back/web:${GIT_SHA}
+    image: ghcr.io/sejongdxunit6/unit6-back/web:${GIT_SHA}
     # build: 는 prod에선 쓰지 않음 (이미지 받아오기)
     env_file: .env
     environment:
