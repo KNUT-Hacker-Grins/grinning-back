@@ -1,0 +1,84 @@
+name: CI/CD to EC2
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write   # GHCR 푸시
+  id-token: write
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/web
+  GIT_SHA: ${{ github.sha }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.GIT_SHA }}
+            ${{ env.IMAGE_NAME }}:latest
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (for scripts/templates)
+        uses: actions/checkout@v4
+
+      - name: Copy files to server (optional if repo is already on server)
+        if: ${{ vars.COPY_REPO_TO_SERVER == 'true' }}
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: |
+            docker-compose.yml
+            docker-compose.prod.yml
+            nginx.conf
+            remote-deploy.sh
+          target: ~/app
+          overwrite: true
+
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          envs: GIT_SHA,GHCR_USER,GHCR_TOKEN
+          command_timeout: 30m
+          script: |
+            set -euo pipefail
+            export GHCR_USER="${{ secrets.GHCR_USER }}"
+            export GHCR_TOKEN="${{ secrets.GHCR_TOKEN }}"
+            cd ~/app
+            chmod +x remote-deploy.sh
+            ./remote-deploy.sh "${GIT_SHA}"
