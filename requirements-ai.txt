@@ -1,0 +1,9 @@
+--only-binary=:all:
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+ultralytics==8.3.176
+ultralytics-thop==2.0.15
+torch==2.7.1
+torchaudio==2.7.1
+torchvision==0.22.1
+opencv-python==4.12.0.88

@@ -5,6 +5,7 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: sqlite:////app/data/db.sqlite3
+      ENABLE_AI: "true" 
     volumes:
       - data:/app/data
     restart: unless-stopped
