@@ -1,13 +1,13 @@
 from rest_framework.views import APIView # APIView 임포트
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from core.common.utils.responses import error_response, success_response
 from ..serializers.request import UserProfileUpdateSerializer
 from ..serializers.response import UserResponseSerializer
 
 class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         """
