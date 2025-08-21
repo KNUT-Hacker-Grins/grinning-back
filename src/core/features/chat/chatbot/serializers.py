@@ -11,3 +11,4 @@ class ChatResponseSerializer(serializers.Serializer):
     reply = serializers.CharField()
     choices = serializers.ListField(child=serializers.CharField(), required=False)
     recommendations = serializers.ListField(child=serializers.DictField(), required=False)
+    data = serializers.DictField(required=False)

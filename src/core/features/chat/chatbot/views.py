@@ -26,16 +26,8 @@ class ChatbotMessageView(APIView):
             session = _ensure_session(data.get("session_id", ""))
             
             handler = ChatBotHandler(session, data.get("intent"), data.get("message"))
-            reply_data = handler.handle_request()
-
-            return Response({
-                "session_id": reply_data.get("session_id"),
-                "state": reply_data.get("state"),
-                "reply": reply_data.get("reply"),
-                "choices": reply_data.get("choices", []),
-                "recommendations": reply_data.get("recommendations", []),
-                "data": reply_data.get("data", {})
-            })
+            reply_dict = handler.handle_request()  
+            return Response(reply_dict, status=status.HTTP_200_OK)
         
         except Exception as e:
             print(f"An error occurred: {e}")
