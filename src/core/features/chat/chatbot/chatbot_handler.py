@@ -1,6 +1,4 @@
-import uuid
-from rest_framework.response import Response
-from .models import InquiryLog, ChatSession
+from .models import InquiryLog
 from ml.llm.gemini import GeminiService  
 from ml.nlp.similarity import LostItemsRecommander
 
@@ -42,8 +40,8 @@ class ChatBotHandler:
 
     def __init__(self, session, intent, message):
         self.session = session
-        self.intent = intent
-        self.message = message
+        self.intent = (intent or "").strip()
+        self.message = (message or "").strip()
         self.response = {}
 
     def handle_request(self):
@@ -60,7 +58,7 @@ class ChatBotHandler:
         else:
             # 정의되지 않은 상태에 대한 예외 처리
             # Fallback for undefined states
-            self.response = self._send_response(
+            self.response = self.build_response(
                 reply=ChatReply.안내내용,
                 choices=WELCOME_CHOICES
             )
@@ -77,28 +75,28 @@ class ChatBotHandler:
             self.session.state = ChatState.AWAITING_DESCRIPTION
             self.session.context = {"intent": self.intent}
             self.session.save(update_fields=["state", "context", "updated_at"])
-            self.response = self._send_response(reply=ChatReply.분실물찾기)
+            self.response = self.build_response(reply=ChatReply.분실물찾기)
             
         elif self.intent == "분실물 신고":
             self.session.state = ChatState.MOVE_TO_ARTICLE
             self.session.context = {"intent": self.intent}
             self.session.save(update_fields=["state", "context", "updated_at"])
-            self.response = self._send_response(reply=ChatReply.분실물신고)
+            self.response = self.build_response(reply=ChatReply.분실물신고)
 
         elif self.intent == "기타 문의":
             self.session.state = ChatState.OTHER
             self.session.context = {"intent": self.intent}
             self.session.save(update_fields=["state", "context", "updated_at"])
-            self.response = self._send_response(reply=ChatReply.기타문의)
+            self.response = self.build_response(reply=ChatReply.기타문의)
         else:
-            self.response = self._send_response(
+            self.response = self.build_response(
                 reply=ChatReply.안내내용,
                 choices=WELCOME_CHOICES
             )
 
     def _handle_awaiting_description_state(self):
         if not self.message: 
-            self.response = self._send_response(reply=ChatReply.특징입력대기)
+            self.response = self.build_response(reply=ChatReply.특징입력대기)
             return 
         
         InquiryLog.objects.create(session=self.session, message=self.message)
@@ -108,13 +106,13 @@ class ChatBotHandler:
             recs = LostItemsRecommander(query, top_k=5)
 
             if recs:
-                self.response = self._send_response(
+                self.response = self.build_response(
                     reply=ChatReply.유사분실물추천, 
                     choices=SEARCH_CHOICE, 
                     recommendations=recs
                     )
             else:   
-                self.response = self._send_response(
+                self.response = self.build_response(
                     reply=ChatReply.유사분실물찾지못함, 
                     choices=SEARCH_CHOICE
                     )
@@ -125,7 +123,7 @@ class ChatBotHandler:
         except Exception as e:
             # Gemini 또는 Recommender 서비스에서 오류 발생 시 처리
             print(f"Error in awaiting description state: {e}")
-            self.response = self._create_response(
+            self.response = self.build_response(
                 reply=ChatReply.오류발생,
                 choices=WELCOME_CHOICES
             )
@@ -135,28 +133,36 @@ class ChatBotHandler:
 
     def _handle_move_to_article_state(self):
         if self.message:
-            article_infor = GeminiService.call_gemini_for_auto_posting(self.message)
-            self.response = self._send_response(reply=ChatReply.게시글작성이동, data=article_infor)
+            article_info = GeminiService.call_gemini_for_auto_posting(self.message)
+            self.response = self.build_response(reply=ChatReply.게시글작성이동, data=article_info)
             self.session.state = ChatState.IDLE
             self.session.save(update_fields=["state", "updated_at"])
         else:
-            self.response = self._send_response(reply=ChatReply.특징입력대기)
+            self.response = self.build_response(reply=ChatReply.특징입력대기)
 
     def _handle_other_state(self):
         if self.message:
             InquiryLog.objects.create(session=self.session, message=self.message, extra={"type":"etc"})
-            self.response = self._send_response(reply=ChatReply.기타문의접수완료, choices=WELCOME_CHOICES)
+            self.response = self.build_response(reply=ChatReply.기타문의접수완료, choices=WELCOME_CHOICES)
             self.session.state = ChatState.IDLE
             self.session.save(update_fields=["state", "updated_at"])
         else:
-            self.response = self._send_response(reply=ChatReply.기타문의내용작성)
+            self.response = self.build_response(reply=ChatReply.기타문의내용작성)
 
-    def _send_response(self, reply, choices=[], recommendations=[], data={}):
-        return Response({
+    def build_response(self, reply, choices=None, recommendations=None, data=None):
+        # 기본값 방어
+        if choices is None:
+            choices = []
+        if recommendations is None:
+            recommendations = []
+        if data is None:
+            data = {}
+
+        return {
             "session_id": self.session.session_id,
             "state": self.session.state,
             "reply": reply,
             "choices": choices,
             "recommendations": recommendations,
-            "data": data
-        })
+            "data": data,
+        }
