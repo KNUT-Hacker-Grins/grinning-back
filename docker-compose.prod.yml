@@ -1,11 +1,12 @@
 services:
   web:
-    image: ghcr.io/sejongdxunit6/unit6-back/web:${GIT_SHA}
-    # build: 는 prod에선 쓰지 않음 (이미지 받아오기)
+    # 기존: image: ghcr.io/sejongdxunit6/unit6-back/web:${GIT_SHA}
+    # 수정: GIT_SHA 대신 GIT_SHA_VAL을 사용 (쉘 위치인자 문법과 혼동 방지용 별도 이름)
+    image: ghcr.io/sejongdxunit6/unit6-back/web:${GIT_SHA_VAL}
     env_file: .env
     environment:
       DATABASE_URL: sqlite:////app/data/db.sqlite3
-      ENABLE_AI: "true" 
+      ENABLE_AI: "true"
     volumes:
       - data:/app/data
     restart: unless-stopped
