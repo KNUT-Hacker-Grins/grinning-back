@@ -3,13 +3,13 @@ from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status as http_status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny 
 from .models import Report
 from .serializers import ReportSerializer
 from core.features.lostfound.lost_items.models import LostItem
 
 class MarkAsFoundView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     # permission_classes = [IsAdminUser]
 
     def patch(self, request, id):
@@ -38,7 +38,7 @@ class MarkAsFoundView(APIView):
         }, status=http_status.HTTP_200_OK)
     
 class ReportCreateView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request, post_id):
         serializer = ReportSerializer(data={**request.data, 'post_id': post_id}, context={'request': request})
@@ -58,7 +58,7 @@ class ReportCreateView(APIView):
         }, status=400)
     
 class ReportListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     # permission_classes = [IsAdminUser]
 
     def get(self, request):
