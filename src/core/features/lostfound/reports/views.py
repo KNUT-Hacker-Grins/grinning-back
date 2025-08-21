@@ -38,7 +38,7 @@ class MarkAsFoundView(APIView):
         }, status=http_status.HTTP_200_OK)
     
 class ReportCreateView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request, post_id):
         serializer = ReportSerializer(data={**request.data, 'post_id': post_id}, context={'request': request})
@@ -58,7 +58,7 @@ class ReportCreateView(APIView):
         }, status=400)
     
 class ReportListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     # permission_classes = [IsAdminUser]
 
     def get(self, request):
