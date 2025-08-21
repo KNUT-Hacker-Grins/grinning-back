@@ -1,3 +1,6 @@
+--only-binary=:all:
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 annotated-types==0.7.0
 anyio==4.10.0
 asgiref==3.9.1
@@ -100,3 +103,9 @@ websocket-client==1.8.0
 websockets==15.0.1
 wsproto==1.2.0
 zipp==3.23.0
+ultralytics==8.3.176
+ultralytics-thop==2.0.15
+torch==2.7.1
+torchaudio==2.7.1
+torchvision==0.22.1
+opencv-python==4.12.0.88
