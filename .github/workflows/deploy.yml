@@ -63,7 +63,7 @@ jobs:
             docker-compose.prod.yml
             nginx.conf
             remote-deploy.sh
-          target: ~/app
+          target: /srv/app
           overwrite: true
 
       - name: Deploy over SSH
@@ -79,6 +79,6 @@ jobs:
             set -euo pipefail
             export GHCR_USER="${{ secrets.GHCR_USER }}"
             export GHCR_TOKEN="${{ secrets.GHCR_TOKEN }}"
-            cd ~/app
+            cd /srv/app
             chmod +x remote-deploy.sh
             ./remote-deploy.sh "${GIT_SHA}"
