@@ -28,6 +28,8 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 
+python manage.py makemigrations accounts chat chatbot found_items lost_items reports lost_insight police 
+
 from apps.accounts.models import User
 user_count = User.objects.count()
 print(user_count)

@@ -97,8 +97,9 @@ def create_lost_item(request):
 
     try:
         # 2. 분실물 신고 생성
-        lost_item = serializer.save(user=request.user)
-
+        user = request.user if getattr(request.user, "is_authenticated", False) else None
+        lost_item = serializer.save(user=user) 
+        
         # 3. 성공 응답
         return success_response(
             data={
@@ -229,7 +230,7 @@ def lost_items_list_by_search(request):
     """분실물 목록 검색 API"""
 
     # 1. 쿼리 파라미터 처리
-    search_query = request.GET.get('search_query', 1)
+    search_query = request.GET.get('search_query', '')
     page = int(request.GET.get('page', 1))
     limit = int(request.GET.get('limit', 10))
     status_filter = request.GET.get('status', None)
@@ -243,14 +244,15 @@ def lost_items_list_by_search(request):
 
     # 3-1. 검색어에 따른 추천된 습득물
     query = GeminiService.call_gemini_for_parsing_text(search_query)
-    recs = LostItemsRecommander(queryset, query, top_k=queryset.count())
+    recs = LostItemsRecommander(total_count=queryset.count()).analy_similarity_for_Tfidf(query=query)
 
     # 3-2. 검색어에 따른 카테고리 검색 횟수 추가 
+    print(query)
     category_key = query.split(" ")[0]
     today = timezone.now().date()
     obj, _ = CategoryDailyCount.objects.get_or_create(category=category_key, date=today)
-    obj.search_count = F("search_count") + 1
-    obj.save(update_fields=["search_count"])
+    obj.count = F("count") + 1
+    obj.save(update_fields=["count"])
     obj.refresh_from_db()
 
     # 4. 페이징 처리
@@ -268,6 +270,7 @@ def lost_items_list_by_search(request):
     return success_response(
         data={
             "items": serializer.data,
+            "category_key": category_key,
             "page": page,
             "limit": limit,
             "total": paginator.count

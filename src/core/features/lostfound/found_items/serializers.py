@@ -16,8 +16,9 @@ class FoundItemSerializer(serializers.ModelSerializer):
     found_date = serializers.DateTimeField(write_only=True, source='found_at')
     class Meta:
         model = FoundItem
-        fields = ['id', 'user', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_urls', 'category', 'status', 'created_at', 'updated_at', 'found_date', 'color']
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'status', 'found_at']
+        # user 제거함 
+        fields = ['id', 'title', 'description', 'found_at', 'found_location', 'latitude', 'longitude', 'image_urls', 'category', 'status', 'created_at', 'updated_at', 'found_date', 'color']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'status', 'found_at']
 
     # def create(self, validated_data):
     #     image_urls = validated_data.get('image_urls')

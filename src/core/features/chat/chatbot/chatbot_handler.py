@@ -19,8 +19,8 @@ class ChatReply:
     분실물신고 = "어떤 물건을 습득하셨나요? 색상/형태/브랜드 등 자세히 적어주세요."
     기타문의 = "문의 내용을 자유롭게 작성해 주세요. 관리자가 확인 후 답변드립니다." 
     특징입력대기 = "물건의 상세 설명을 입력해 주세요. 예) '검정색 접이식 우산'"
-    유사분실물추천 = "다음 항목이 비슷해 보여요. 맞는 것이 없다면 '🔍 검색하기'를 눌러 상세 검색으로 이동할 수 있어요." 
-    유사분실물찾지못함 = "유사한 항목을 찾지 못했어요. '🔍 검색하기'를 눌러 직접 검색해 보시겠어요?" 
+    유사분실물추천 = "다음 항목이 비슷해 보여요. 게시글 작성을 도와드리기 위해 상세한 물품 설명을 입력해주세요." 
+    유사분실물찾지못함 = "유사한 항목을 찾지 못했어요. 게시글 작성을 도와드리기 위해 상세한 물품 설명을 입력해주세요." 
     기타문의내용작성 = "문의 내용을 작성해 주세요."
     기타문의접수완료 = "문의가 접수되었습니다. 빠르게 확인하겠습니다. 또 도와드릴까요?"
     게시글작성이동 = "게시글을 작성하기 위해 이동합니다."
@@ -50,6 +50,7 @@ class ChatBotHandler:
         Dispatches to the correct handler based on the current session state to generate a response.
         """
         current_state = self.session.state
+        print(current_state)
         handler_method_name = self.STATE_HANDLERS.get(current_state)
         
         if handler_method_name:
@@ -88,6 +89,7 @@ class ChatBotHandler:
             self.session.context = {"intent": self.intent}
             self.session.save(update_fields=["state", "context", "updated_at"])
             self.response = self.build_response(reply=ChatReply.기타문의)
+
         else:
             self.response = self.build_response(
                 reply=ChatReply.안내내용,
@@ -103,7 +105,7 @@ class ChatBotHandler:
 
         try:
             query = GeminiService.call_gemini_for_parsing_text(self.message)
-            recs = LostItemsRecommander(query, top_k=5)
+            recs = LostItemsRecommander().analy_similarity_for_Tfidf(query=query, top_k=5)
 
             if recs:
                 self.response = self.build_response(

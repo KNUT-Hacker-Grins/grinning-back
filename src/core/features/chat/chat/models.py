@@ -1,5 +1,5 @@
 from django.db import models
-from django.conf import settings
+from config import settings
 
 
 class ChatRoom(models.Model):
@@ -22,7 +22,11 @@ class ChatRoom(models.Model):
 
 class ChatMessage(models.Model):
     room = models.ForeignKey(ChatRoom, related_name='messages', on_delete=models.CASCADE)
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True, blank=True,            
+        on_delete=models.SET_NULL,
+    )
     content = models.TextField()
     message_type = models.CharField(max_length=10, default='text')  # 'text', 'image', 등
     is_read = models.BooleanField(default=False)

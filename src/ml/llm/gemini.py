@@ -3,14 +3,7 @@ import json
 from typing import Any, Dict
 import google.generativeai as genai
 from config.settings import GEMINI_API_KEY
-from .prompt import (
-    prompt_for_category,
-    config_for_category,
-    prompt_for_translating,
-    config_for_translating,
-    prompt_for_auto_posting,
-    config_for_auto_posting,
-)
+from .prompt import *
 
 class GeminiService:
     _model = None  # class-level singleton
