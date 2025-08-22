@@ -3,7 +3,7 @@ from django.utils.timezone import localtime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, pagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from .models import ChatRoom
 from .serializers import ChatRoomSerializer
 from .models import ChatRoom, ChatMessage
@@ -12,11 +12,14 @@ from core.features.lostfound.found_items.models import FoundItem
 from core.features.lostfound.lost_items.models import LostItem
 
 class ChatMessageCreateView(APIView):
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request, room_id):
         room = get_object_or_404(ChatRoom, id=room_id)
         serializer = ChatMessageSerializer(data=request.data)
         if serializer.is_valid():
-            message = serializer.save(sender=request.user, room=room)
+            user = request.user if request.user.is_authenticated else None
+            message = serializer.save(sender=user, room=room)
             return Response({
                 'status': 'success',
                 'code': 201,
@@ -30,11 +33,13 @@ class ChatMessagePagination(pagination.PageNumberPagination):
     page_size_query_param = 'limit'
 
 class ChatMessageListView(APIView):
+    permission_classes = [permissions.AllowAny]
+
     def get(self, request, room_id):
         room = get_object_or_404(ChatRoom, id=room_id)
 
-        if request.user not in room.participants.all():
-            return Response({"detail": "접근 권한 없음"}, status=403)
+        # if request.user not in room.participants.all():
+        #     return Response({"detail": "접근 권한 없음"}, status=403)
 
         messages = ChatMessage.objects.filter(room=room).order_by('-timestamp')
         paginator = ChatMessagePagination()
@@ -53,11 +58,12 @@ class ChatMessageListView(APIView):
         })
 
 class ChatRoomListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        user = request.user
-        rooms = ChatRoom.objects.filter(participants=user).distinct()
+        # user = request.user
+        user = request.user if request.user.is_authenticated else None
+        rooms = ChatRoom.objects.filter(user_a=user).distinct()
 
         result = []
         for room in rooms:
@@ -72,7 +78,7 @@ class ChatRoomListView(APIView):
                 is_read=False
             ).exclude(sender=user).count()
 
-            other_user = room.participants.exclude(id=user.id).first()
+            other_user = room.user_b
             result.append({
                 "room_id": str(room.id),
                 "other_user": {
@@ -89,13 +95,14 @@ class ChatRoomListView(APIView):
 
 
 class MarkAsReadView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, room_id, *args, **kwargs):
-        user = request.user
+        # user = request.user
+        user = request.user if request.user.is_authenticated else None
 
         try:
-            room = ChatRoom.objects.get(id=room_id, participants=user)
+            room = ChatRoom.objects.get(id=room_id, user_a=user)
         except ChatRoom.DoesNotExist:
             return Response({'detail': '채팅방이 존재하지 않거나 권한이 없습니다.'}, status=404)
 
@@ -110,6 +117,8 @@ class MarkAsReadView(APIView):
         })
     
 class StartChatView(APIView):
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request):
         post_id = request.data.get("post_id")
         post_type = request.data.get("post_type")
@@ -134,25 +143,30 @@ class StartChatView(APIView):
                 "code": 200,
                 "data": {
                     "room_id": existing.id,
-                    "participants": serializer.data["participants"]
+                    "user_a": serializer.data["user_a"],
+                    "user_b": serializer.data["user_b"]
                 },
                 "message": "기존 채팅방 반환"
             })
 
         # 3. 새 채팅방 생성
-        if request.user == post.user:
-            return Response(
-                {
-                    "status": "fail",
-                    "code": 403,
-                    "message": "자신의 글에는 채팅을 시작할 수 없습니다."
-                },
-                status=403
-            )
+        # if request.user == post.user:
+        #     return Response(
+        #         {
+        #             "status": "fail",
+        #             "code": 403,
+        #             "message": "자신의 글에는 채팅을 시작할 수 없습니다."
+        #         },
+        #         status=403
+        #     )
         
         room = ChatRoom.objects.create(post_type=post_type, post_id=post_id)
-        room.participants.add(request.user, post.user)
-        room.save()
+        user1 = request.user if request.user.is_authenticated else None
+        user2 = post.user if post.user.is_staff else None
+        room = ChatRoom.objects.create(
+            user_a=user1,
+            user_b=user2
+        )
 
         serializer = ChatRoomSerializer(room)
         return Response({
@@ -160,17 +174,19 @@ class StartChatView(APIView):
             "code": 201,
             "data": {
                 "room_id": str(room.id),
-                "participants": serializer.data["participants"]
+                "user_a": serializer.data["user_a"],
+                "user_b": serializer.data["user_b"]
             },
             "message": "채팅방 생성 완료"
         }, status=201)
 
 class UnreadCountView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
-        user = request.user
-        rooms = ChatRoom.objects.filter(participants=user)
+        # user = request.user
+        user = request.user if request.user.is_authenticated else None
+        rooms = ChatRoom.objects.filter(user_a=user)
 
         unread_by_room = {}
         for room in rooms:
