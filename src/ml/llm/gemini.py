@@ -50,10 +50,6 @@ class GeminiService:
         return cls.transform_json2txt_for_gemini(data)
 
     @classmethod
-    def call_gemini_for_translating(cls, message: str):
-        return cls.call_gemini(message, prompt_for_translating, config_for_translating)
-
-    @classmethod
     def call_gemini_for_auto_posting(cls, message: str):
         return cls.call_gemini(message, prompt_for_auto_posting, config_for_auto_posting)
 
