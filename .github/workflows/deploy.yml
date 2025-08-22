@@ -23,10 +23,10 @@ jobs:
       - name: Deploy to EC2 instance
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.EC2_HOST }}        # GitHub Secrets에 등록한 IP
-          username: ${{ secrets.EC2_USERNAME }} # GitHub Secrets에 등록한 사용자 이름
-          key: ${{ secrets.EC2_PRIVATE_KEY }}   # GitHub Secrets에 등록한 개인키
-          
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+
           # EC2 서버에 접속해서 실행할 명령어들
           script: |
             # 프로젝트 폴더로 이동
@@ -35,17 +35,16 @@ jobs:
             # GitHub에서 최신 소스 코드 가져오기
             git pull origin main
             
-            # 파이썬 가상환경 활성화
-            source venv/bin/activate
+            # NVM을 로드해서 node, npm, pm2 명령어 경로를 설정합니다. (pm2 오류 해결)
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             
-            # 파이썬 패키지 설치
-            pip install -r requirements.txt
+            # venv 안의 pip를 직접 실행하여 패키지를 정확한 위치에 설치합니다. (가상환경 문제 해결)
+            venv/bin/pip install -r requirements.txt
             
-            # 데이터베이스 변경사항 적용 (마이그레이션)
-            python src/manage.py migrate
-            
-            # 정적 파일 수집 (CSS, JS 등)
-            python src/manage.py collectstatic --noinput
+            # venv 안의 python을 직접 실행하고, 올바른 manage.py 경로를 사용합니다. (manage.py 오류 해결)
+            venv/bin/python manage.py migrate
+            venv/bin/python manage.py collectstatic --noinput
             
             # PM2로 앱을 중단 없이 재시작
             pm2 reload "my-app"
