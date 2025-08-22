@@ -57,7 +57,7 @@ config_for_category ={
   }
 }
 
-prompt_for_translating = prompt_for_item = """\
+prompt_for_auto_posting = """\
 아래는 한국어로 작성된 분실물/습득물 설명입니다. 설명을 읽고 지정된 스키마에 맞춰 JSON만 출력하세요.
 불필요한 텍스트는 절대 출력하지 마세요(코멘트/해설/마크다운 금지). 
 
@@ -135,7 +135,7 @@ prompt_for_translating = prompt_for_item = """\
 """
 
 
-config_for_translating = config_for_item = {
+config_for_auto_posting = {
     "response_mime_type": "application/json",
     "response_schema": {
         "type": "OBJECT",
@@ -165,8 +165,3 @@ config_for_translating = config_for_item = {
 }
 
 
-prompt_for_auto_posting = ''
-
-config_for_auto_posting = {
-    
-}
