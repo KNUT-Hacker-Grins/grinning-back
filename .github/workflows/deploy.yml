@@ -32,17 +32,15 @@ jobs:
             # 프로젝트 폴더로 이동
             cd /home/ubuntu/Unit6-back
             
-            # GitHub에서 최신 소스 코드 가져오기
-            git pull origin main
+            git fetch --all
+            git reset --hard origin/main
+            git pull origin main 
             
-            # NVM을 로드해서 node, npm, pm2 명령어 경로를 설정합니다. (pm2 오류 해결)
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             
-            # venv 안의 pip를 직접 실행하여 패키지를 정확한 위치에 설치합니다. (가상환경 문제 해결)
             venv/bin/pip install -r requirements.txt
             
-            # venv 안의 python을 직접 실행하고, 올바른 manage.py 경로를 사용합니다. (manage.py 오류 해결)
             venv/bin/python manage.py migrate
             venv/bin/python manage.py collectstatic --noinput
             
