@@ -3,7 +3,9 @@ from config import settings
 
 
 class ChatRoom(models.Model):
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    user_a = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE, related_name='direct_rooms_a')
+    user_b = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE, related_name='direct_rooms_b')
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     # 게시물 참조 정보 (found/lost 구분)
