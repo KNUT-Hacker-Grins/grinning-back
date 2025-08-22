@@ -63,7 +63,8 @@ class FoundItemCreateView(APIView):
     def post(self, request):
         serializer = FoundItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
+        user = request.user if getattr(request.user, "is_authenticated", False) else None
+        serializer.save(user=user) 
 
         return Response({
             "status": "success",

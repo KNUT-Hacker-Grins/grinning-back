@@ -2,13 +2,16 @@ prompt_for_category = """\
 아래 한국어 분실물 설명에서 category, color, raw를 추출하세요.
 
 [카테고리 규칙]
-- category는 아래 4개 중 하나를 선택(없거나 불명확하면 "기타")
-  1) 보석_귀금속_시계
-  2) 전자기기
-  3) 문구류
-  4) 피혁_잡화
-- color는 지정 목록(검정/검은/검정색/흰/흰색/파란/파란색/빨간/빨간색/초록/초록색/회색/노란/노란색/갈색)에서 선택.
-  색상 언급이 없으면 "미상".
+- category: 아래 5개 중 하나를 선택(불명확하면 "기타")
+    1) 보석_귀금속_시계
+    2) 전자기기
+    3) 문구류
+    4) 피혁_잡화
+    5) 기타
+- color: 아래 목록에서만 선택. 언급 없거나 애매하면 "unknown".
+  ["검정","검은","검정색","흰","흰색","파란","파란색","빨간","빨간색",
+   "초록","초록색","회색","노란","노란색","갈색","unknown"]
+  - 색상 표준화 규칙(예): '빨강','레드' → '빨간색', '블루' → '파란색', '블랙' → '검정색' 등 가장 가까운 항목으로 매핑.
 - raw는 입력 원문 그대로.
 
 [품목→카테고리 힌트(일관성 유지)]
@@ -16,6 +19,10 @@ prompt_for_category = """\
 - 전자기기: 계산기, 마우스, 보조배터리, 무선이어폰, 스마트워치, 무선이어폰크래들, 무선헤드폰, 노트북, 태블릿, 태블릿펜, USB메모리, 휴대폰
 - 문구류: 연필, 볼펜, 지우개, 필통, 샤프, 커터칼, 샤프심통, 자
 - 피혁_잡화: 지갑, 백팩, 안경, 캡/야구 모자
+
+[예외사항]
+- 이외에도 휴대폰과 스마트폰, 백팩과 가방 등 비슷한 단어는 같은 카테고리로 묶도록 하세요.
+- 색깔 힌트는 다양할 수 있습니다. 이외에도 다양한 색깔 지정이 있다면 단계적으로 생각해서 분리해보세요.
 
 [출력 형식]
 - 반드시 JSON만 출력. 다른 텍스트 금지.
@@ -52,8 +59,7 @@ config_for_category ={
               "description": "입력 원문 그대로",
           },
       },
-      "required": ["category", "color", "raw"],
-      "propertyOrdering": ["category", "color", "raw"],
+      "required": ["category", "color", "raw"]
   }
 }
 
@@ -159,8 +165,7 @@ config_for_auto_posting = {
             "found_at": { "type": "STRING", "nullable": True, "description": "ISO8601 혹은 null" },
             "found_location": { "type": "STRING", "description": "습득 장소. 없으면 빈 문자열" }
         },
-        "required": ["title","description","category","color","latitude","longitude","found_at","found_location"],
-        "propertyOrdering": ["title","description","category","color","latitude","longitude","found_at","found_location"]
+        "required": ["title","description","category","color","latitude","longitude","found_at","found_location"]
     }
 }
 
