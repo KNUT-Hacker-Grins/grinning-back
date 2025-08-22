@@ -1,22 +1,21 @@
-import uuid
 from django.db import models
-from django.conf import settings
+from config import settings
 from django.core.validators import MinValueValidator
 
 
 class LostItem(models.Model):
     """잃어버린 물건 신고 모델"""
     STATUS_CHOICES = [
-            ('searching', '찾는 중'),
-            ('found', '찾음'),
-            ('cancelled', '취소')
-        ]
+        ('searching', '찾는 중'),
+        ('found', '찾음'),
+        ('cancelled', '취소')
+    ]
     
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )  # 신고한 사용자
-
+        null=True, blank=True,            
+        on_delete=models.SET_NULL
+    )
     title = models.CharField(max_length=100)  # 분실물 제목
     description = models.TextField()  # 상세 설명
     category = models.JSONField(default=list)

@@ -1,5 +1,5 @@
 from django.db import models
-from django.conf import settings
+from config import settings
 
 """
 available	주인을 기다리고 있음 (기본 상태)
@@ -14,7 +14,11 @@ class FoundItem(models.Model):
         ('archived', '숨김 처리')
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # 등록한 유저
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True, blank=True,            
+        on_delete=models.SET_NULL
+    )
     title = models.CharField(max_length=100)
     description = models.TextField()
     category = models.JSONField(default=dict)
