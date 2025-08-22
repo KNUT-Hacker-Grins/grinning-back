@@ -1,32 +1,32 @@
-# Python cache
-/**/__pycache__
-/**/**/__pycache__
-
-# Django migrations and DB
-db.sqlite3
-
-# IDE/Editor files
-.idea/
-*.iml
-
-# OS-specific
-.DS_Store
-
-# Environment
+printf '
+# Environments & Credentials
+venv/
 .env
 *.env
 
-# train, val dataset
+# Python & Django Cache
+**/__pycache__/
+*.pyc
+*.log
+src/config.sock
+
+# Database
+db.sqlite3
+
+# Large Data & Models
+src/hf_models/
 src/classifier/data/
+**/*.pt
 
-# environments
-venv/
+# OS & IDE Files
+.DS_Store
+.idea/
+*.iml
 
-# migations 
-/**/**/migrations
-
-# model file
-/**/**/*.pt          
-
-# front project
+# Other Projects
 Unit6-front-/
+
+# Django Migrations 
+**/migrations/
+
+' > .gitignore
