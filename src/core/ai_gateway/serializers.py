@@ -8,8 +8,5 @@ class ClassificationSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         image_url = validated_data.get('image_url')
-        
-        # 이미지 분류
         prediction_list = YOLOManager().predict_yolo(image_url)
-        
         return prediction_list
