@@ -1,0 +1,13 @@
+# JavaScript/Node 산출물 무시
+node/* linguist-vendored
+npm/* linguist-vendored
+
+# 모든 정적 파일 무시
+*.css linguist-vendored
+*.js linguist-vendored
+*.json linguist-vendored
+*.lock linguist-vendored
+
+# 파이썬은 분석에 포함
+*.py linguist-detectable=true
+
