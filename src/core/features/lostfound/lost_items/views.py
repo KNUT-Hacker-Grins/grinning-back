@@ -244,7 +244,7 @@ def lost_items_list_by_search(request):
 
     # 3-1. 검색어에 따른 추천된 습득물
     query = GeminiService.call_gemini_for_parsing_text(search_query)
-    recs = LostItemsRecommander(total_count=queryset.count()).analy_similarity_for_Tfidf(query=query, top_k=1)
+    recs = LostItemsRecommander(total_count=queryset.count()).analy_similarity_for_Tfidf(query=query)
 
     # 3-2. 검색어에 따른 카테고리 검색 횟수 추가 
     category_key = query.split(" ")[0]
@@ -262,9 +262,6 @@ def lost_items_list_by_search(request):
 
     page_obj = paginator.get_page(page)
 
-    # 5. 시리얼라이저로 변환
-    serializer = LostItemResponseSerializer(page_obj, many=True)
-    
     # 6. 성공 응답
     return success_response(
         data={
