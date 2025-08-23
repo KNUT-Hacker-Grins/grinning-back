@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         # Assumption: The service URL for lost items is getLostThingInfoAccToClAreaPd
         # This needs to be verified from the actual API documentation.
-        url = 'http://apis.data.go.kr/1320000/LostGoodsInfoInqireService/getLostThingInfoAccToClAreaPd'
+        url = 'http://apis.data.go.kr/1320000/LostGoodsInfoInqireService/getLostGoodsInfoAccToClAreaPd'
         params = {
             'serviceKey': api_key,
             'pageNo': '1',
