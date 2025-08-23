@@ -8,7 +8,7 @@ class PoliceFoundItem(models.Model):
     fdSn = models.CharField(max_length=255, verbose_name="습득순번")
     fdYmd = models.CharField(max_length=255, verbose_name="습득일자")
     prdtClNm = models.CharField(max_length=255, verbose_name="물품분류명")
-    rnum = models.IntegerField(verbose_name="순번")
+    rnum = models.IntegerField(verbose_name="순번", default=0)
     clrNm = models.CharField(max_length=255, verbose_name="색상")
     tel = models.CharField(max_length=255, verbose_name="연락처")
 
@@ -24,7 +24,7 @@ class PoliceLostItem(models.Model):
     lstSn = models.CharField(max_length=255, verbose_name="분실순번")
     lstYmd = models.CharField(max_length=255, verbose_name="분실일자")
     prdtClNm = models.CharField(max_length=255, verbose_name="물품분류명")
-    rnum = models.IntegerField(verbose_name="순번")
+    rnum = models.IntegerField(verbose_name="순번", default=0)
     clrNm = models.CharField(max_length=255, verbose_name="색상")
     tel = models.CharField(max_length=255, verbose_name="연락처")
     lstSbjt = models.CharField(max_length=255, verbose_name="분실물제목")
