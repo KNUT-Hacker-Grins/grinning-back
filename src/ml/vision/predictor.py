@@ -83,11 +83,11 @@ class YOLOManager:
                 "class_id": cid,
                 "class_name": name,
                 "bbox": [float(x) for x in box],  # x1,y1,x2,y2
-                "onf": float(conf),
+                "conf": float(conf),
             })
         return outputs
 
-    def predict_yolo(self, param: str, imgsz: int = 768, conf_thres: float = 0.25, iou_thres: float = 0.7):
+    def predict_yolo(self, param: str, imgsz: int = 768, conf_thres: float = 0.75, iou_thres: float = 0.7):
         """
         이미지 경로를 넣으면 감지 결과를 리스트로 반환
         - t3.micro(1GB) 대응: imgsz<=512, batch=1, 스레드=1
