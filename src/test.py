@@ -1,1 +1,0 @@
-print("test 성공")
