@@ -1,24 +1,33 @@
 from django.db import models
 
 class PoliceFoundItem(models.Model):
-    atcId = models.CharField(max_length=255, primary_key=True, help_text="관리ID")
-    clrNm = models.CharField(max_length=100, blank=True, null=True, help_text="색상명")
-    depPlace = models.CharField(max_length=255, blank=True, null=True, help_text="보관장소")
-    fdFilePathImg = models.URLField(max_length=500, blank=True, null=True, help_text="습득물 이미지 경로")
-    fdPrdtNm = models.CharField(max_length=255, blank=True, null=True, help_text="습득물명")
-    fdSbjt = models.TextField(blank=True, null=True, help_text="내용")
-    fdSn = models.IntegerField(blank=True, null=True, help_text="순번")
-    fdYmd = models.DateField(blank=True, null=True, help_text="습득일")
-    prdtClNm = models.CharField(max_length=255, blank=True, null=True, help_text="물품분류명")
-
-    # 추가 필드 (데이터 동기화 시간 등)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "경찰청 습득물"
-        verbose_name_plural = "경찰청 습득물 목록"
-        ordering = ['-fdYmd', '-atcId'] # 최신 습득일, 관리ID 순으로 정렬
+    atcId = models.CharField(max_length=255, primary_key=True, verbose_name="관리ID")
+    depPlace = models.CharField(max_length=255, verbose_name="보관장소")
+    fdFilePathImg = models.URLField(max_length=1024, verbose_name="습득물사진파일경로")
+    fdPrdtNm = models.CharField(max_length=255, verbose_name="습득물품명")
+    fdSn = models.CharField(max_length=255, verbose_name="습득순번")
+    fdYmd = models.CharField(max_length=255, verbose_name="습득일자")
+    prdtClNm = models.CharField(max_length=255, verbose_name="물품분류명")
+    rnum = models.IntegerField(verbose_name="순번")
+    clrNm = models.CharField(max_length=255, verbose_name="색상")
+    tel = models.CharField(max_length=255, verbose_name="연락처")
 
     def __str__(self):
         return f"{self.fdPrdtNm} ({self.atcId})"
+
+
+class PoliceLostItem(models.Model):
+    atcId = models.CharField(max_length=255, primary_key=True, verbose_name="관리ID")
+    lstPlace = models.CharField(max_length=255, verbose_name="분실장소")
+    lstFilePathImg = models.URLField(max_length=1024, verbose_name="분실물사진파일경로")
+    lstPrdtNm = models.CharField(max_length=255, verbose_name="분실물품명")
+    lstSn = models.CharField(max_length=255, verbose_name="분실순번")
+    lstYmd = models.CharField(max_length=255, verbose_name="분실일자")
+    prdtClNm = models.CharField(max_length=255, verbose_name="물품분류명")
+    rnum = models.IntegerField(verbose_name="순번")
+    clrNm = models.CharField(max_length=255, verbose_name="색상")
+    tel = models.CharField(max_length=255, verbose_name="연락처")
+    lstSbjt = models.CharField(max_length=255, verbose_name="분실물제목")
+
+    def __str__(self):
+        return f"{self.lstPrdtNm} ({self.atcId})"
