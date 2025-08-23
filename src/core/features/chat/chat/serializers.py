@@ -12,7 +12,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_a', 'user_b']
 
 class ChatMessageSerializer(serializers.ModelSerializer):
-    sender = serializers.StringRelatedField(read_only=True)
+    sender = SimpleUserSerializer(read_only=True) # Changed to use SimpleUserSerializer
 
     class Meta:
         model = ChatMessage
