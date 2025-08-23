@@ -7,8 +7,8 @@ Django 기반 백엔드 서버입니다.
 ---
 
 ## 📂 프로젝트 구조
-
-├── .github/workflows/ # CI/CD (GitHub Actions)
+```
+├── .github/workflows/ # CI/CD (Git Hub Actions)
 ├── src/ # Django 프로젝트/앱 소스
 │ ├── manage.py
 │ └── config/ (settings, urls, wsgi, asgi 등)
@@ -20,7 +20,7 @@ Django 기반 백엔드 서버입니다.
 ├── requirements.txt # 기본 패키지 목록
 ├── requirements_local.txt # 로컬 개발용 패키지 목록
 └── README.md
-
+```
 
 ## 🚀 개발 환경 실행
 
