@@ -7,7 +7,7 @@ from ml.vision.predictor import YOLOManager
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['social_id', 'email', 'name'] 
+        fields = ['social_id', 'email', 'name', 'profile_picture_url'] 
 
 class FoundItemSerializer(serializers.ModelSerializer):
     latitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
