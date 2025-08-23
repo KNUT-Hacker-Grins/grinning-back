@@ -83,17 +83,18 @@ class YOLOManager:
                 "class_id": cid,
                 "class_name": name,
                 "bbox": [float(x) for x in box],  # x1,y1,x2,y2
-                "conf": float(conf),
+                "onf": float(conf),
             })
         return outputs
 
-    def predict_yolo(self, param: str, imgsz: int = 512, conf_thres: float = 0.25, iou_thres: float = 0.65):
+    def predict_yolo(self, param: str, imgsz: int = 768, conf_thres: float = 0.25, iou_thres: float = 0.7):
         """
         이미지 경로를 넣으면 감지 결과를 리스트로 반환
         - t3.micro(1GB) 대응: imgsz<=512, batch=1, 스레드=1
         """
         if isinstance(param, str) and param.startswith("http"):
             img = download_image(param)
+            
         elif hasattr(param, "read"):
             img = Image.open(param).convert("RGB")
         else:
@@ -110,9 +111,14 @@ class YOLOManager:
             stream=False,   # 리스트로 반환
             max_det=100
         )
-
         # results는 list[Results]
         aggregated = []
         for r in results:
             aggregated.extend(self._process_single_result(r))
+
+        if len(aggregated) == 0:
+            aggregated.append({
+                "category": "기타",
+                "message": "이미지 분류에 실패했습니다."
+            })
         return aggregated

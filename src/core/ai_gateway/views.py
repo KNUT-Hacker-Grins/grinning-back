@@ -1,18 +1,19 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
+from rest_framework.response import Response
 from core.common.error.error import ImageClassificationError
 from .serializers import ClassificationSerializer
 
 class ClassificationView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = ClassificationSerializer(data=request.data)
         if serializer.is_valid():
             try:
                 classified_data = serializer.save()
+                print(classified_data)
                 return Response({
                     "status": "success",
                     "code": 200,
