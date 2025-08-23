@@ -6,7 +6,7 @@ from ..models import LostItem
 class LostItemResponseSerializer(serializers.ModelSerializer):
     """분실물 신고 응답용 시리얼라이저"""
 
-    owner = serializers.SerializerMethodField()
+    # owner = serializers.SerializerMethodField()
 
     class Meta:
         model = LostItem
@@ -21,15 +21,16 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
             'category',
             'reward',
             'status',
-            'owner'
+            # 'owner'
         ]
-        read_only_fields = ['id', 'status', 'owner', 'lost_at', 'lost_location', 'latitude', 'longitude']
+        # owner 삭제
+        read_only_fields = ['id', 'status', 'lost_at', 'lost_location', 'latitude', 'longitude']
 
-    def get_owner(self, obj):
-        user_name = obj.user.name if obj.user else None
-        return {
-            "nickname": user_name
-        }
+    # def get_owner(self, obj):
+    #     user_name = obj.user.name if obj.user else None
+    #     return {
+    #         "nickname": user_name
+    #     }
 
     def to_representation(self, instance):
         # Get the default representation

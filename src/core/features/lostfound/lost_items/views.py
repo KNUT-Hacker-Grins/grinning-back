@@ -244,10 +244,9 @@ def lost_items_list_by_search(request):
 
     # 3-1. 검색어에 따른 추천된 습득물
     query = GeminiService.call_gemini_for_parsing_text(search_query)
-    recs = LostItemsRecommander(total_count=queryset.count()).analy_similarity_for_Tfidf(query=query)
+    recs = LostItemsRecommander(total_count=queryset.count()).analy_similarity_for_Tfidf(query=query, top_k=1)
 
     # 3-2. 검색어에 따른 카테고리 검색 횟수 추가 
-    print(query)
     category_key = query.split(" ")[0]
     today = timezone.now().date()
     obj, _ = CategoryDailyCount.objects.get_or_create(category=category_key, date=today)
@@ -269,7 +268,7 @@ def lost_items_list_by_search(request):
     # 6. 성공 응답
     return success_response(
         data={
-            "items": serializer.data,
+            "items": list(page_obj),
             "category_key": category_key,
             "page": page,
             "limit": limit,
@@ -338,11 +337,11 @@ def update_lost_item(request, id):
         lost_item = get_object_or_404(LostItem, id=id)
 
         # 2. 권한 확인
-        if lost_item.user != request.user:
-            return error_response(
-                error="본인이 작성한 분실물만 수정할 수 있습니다.",
-                code=403
-            )
+        # if lost_item.user != request.user:
+        #     return error_response(
+        #         error="본인이 작성한 분실물만 수정할 수 있습니다.",
+        #         code=403
+        #     )
 
         # 3. 요청 데이터 검증
         serializer = LostItemUpdateSerializer(lost_item, data=request.data, partial=True)
