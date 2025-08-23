@@ -1,12 +1,15 @@
 # lost_items/serializers/response.py
 from rest_framework import serializers
 from ..models import LostItem
+from django.contrib.auth import get_user_model # Import get_user_model
+
+User = get_user_model() # Get the User model
 
 
 class LostItemResponseSerializer(serializers.ModelSerializer):
     """분실물 신고 응답용 시리얼라이저"""
 
-    # owner = serializers.SerializerMethodField()
+    user_profile_picture_url = serializers.SerializerMethodField() # Add this line
 
     class Meta:
         model = LostItem
@@ -21,16 +24,14 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
             'category',
             'reward',
             'status',
-            # 'owner'
+            'user_profile_picture_url', # Add this line
         ]
-        # owner 삭제
-        read_only_fields = ['id', 'status', 'lost_at', 'lost_location', 'latitude', 'longitude']
+        read_only_fields = ['id', 'status', 'lost_at', 'lost_location', 'latitude', 'longitude', 'user_profile_picture_url']
 
-    # def get_owner(self, obj):
-    #     user_name = obj.user.name if obj.user else None
-    #     return {
-    #         "nickname": user_name
-    #     }
+    def get_user_profile_picture_url(self, obj): # Add this method
+        if obj.user and obj.user.profile_picture_url:
+            return obj.user.profile_picture_url
+        return None # Or a default placeholder URL
 
     def to_representation(self, instance):
         # Get the default representation
