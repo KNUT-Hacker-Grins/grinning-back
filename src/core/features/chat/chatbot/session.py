@@ -4,14 +4,14 @@ from django.utils import timezone
 
 COOKIE_NAME = "chat_session_id"
 
-def _ensure_session_by_id(session_id):
+def _ensure_session_by_id(session_id, state="idle"):
     if not session_id:
         session_id = uuid.uuid4().hex[:16]
-        return ChatSession.objects.create(session_id=session_id, state="idle")
+        return ChatSession.objects.create(session_id=session_id, state=state)
     try:
         return ChatSession.objects.get(session_id=session_id)
     except ChatSession.DoesNotExist:
-        return ChatSession.objects.create(session_id=session_id, state="idle")
+        return ChatSession.objects.create(session_id=session_id, state=state)
 
 def get_or_create_session_from_request(request):
     """
