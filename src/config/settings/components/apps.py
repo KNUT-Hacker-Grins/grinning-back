@@ -1,4 +1,5 @@
 INSTALLED_APPS = [
+    'channels', 
     'corsheaders',
     'django_extensions',
     'storages',
@@ -14,6 +15,7 @@ INSTALLED_APPS = [
     "core.features.accounts",
     "core.features.chat.chat",
     "core.features.chat.chatbot",
+    "core.features.chat.questionnaire",
     "core.features.lostfound.found_items",
     "core.features.lostfound.lost_items",
     "core.features.lostfound.reports",
