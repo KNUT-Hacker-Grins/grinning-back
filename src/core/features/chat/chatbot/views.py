@@ -42,7 +42,7 @@ class ChatbotMessageView(APIView):
         data = serializer.validated_data
 
         try:    
-            session = _ensure_session_by_id(data.get("session_id", ""))
+            session, _ = get_or_create_session_from_request(request)
             
             handler = ChatBotHandler(session, data.get("intent"), data.get("message"))
             reply_dict = handler.handle_request()  
