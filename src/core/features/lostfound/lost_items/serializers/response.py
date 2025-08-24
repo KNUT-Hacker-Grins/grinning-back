@@ -31,9 +31,11 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'status', 'lost_at', 'lost_location', 'latitude', 'longitude', 'user_profile_picture_url', 'user_name'] # Added user_name
 
     def get_user_profile_picture_url(self, obj):
-        if obj.user and obj.user.profile_picture_url:
-            return obj.user.profile_picture_url
-        return None # Or a default placeholder URL
+        if obj.user:
+            print(f"DEBUG: User ID: {obj.user.id}, Profile Picture URL from DB: {obj.user.profile_picture_url}")
+            if obj.user.profile_picture_url:
+                return obj.user.profile_picture_url
+        return "/default-profile.png" # Return a default URL if not available
 
     def get_user_name(self, obj): # Added this method
         if obj.user and hasattr(obj.user, 'name'):
