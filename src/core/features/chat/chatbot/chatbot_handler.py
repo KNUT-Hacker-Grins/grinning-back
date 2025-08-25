@@ -153,9 +153,6 @@ class ChatBotHandler:
                 reply=ChatReply.유사분실물찾지못함,
                 choices=SEARCH_CHOICE
             )
-        
-        self.session.state = ChatState.MOVE_TO_ARTICLE
-        self.session.save(update_fields=["state", "updated_at"])
 
     def _handle_move_to_article_state(self):
         if self.message:
