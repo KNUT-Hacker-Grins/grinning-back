@@ -10,12 +10,13 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
     """분실물 신고 응답용 시리얼라이저"""
 
     user_profile_picture_url = serializers.SerializerMethodField()
-    user_name = serializers.SerializerMethodField() # Added this line
+    user_name = serializers.SerializerMethodField()
 
     class Meta:
         model = LostItem
         fields = [
             'id',
+            'title',
             'description',
             'lost_at',
             'lost_location',
@@ -26,21 +27,19 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
             'reward',
             'status',
             'user_profile_picture_url',
-            'user_name', # Added this line
+            'user_name',
         ]
-        read_only_fields = ['id', 'status', 'lost_at', 'lost_location', 'latitude', 'longitude', 'user_profile_picture_url', 'user_name'] # Added user_name
+        read_only_fields = ['id', 'status', 'lost_at', 'lost_location', 'latitude', 'longitude', 'user_profile_picture_url', 'user_name']
 
     def get_user_profile_picture_url(self, obj):
-        if obj.user:
-            print(f"DEBUG: User ID: {obj.user.id}, Profile Picture URL from DB: {obj.user.profile_picture_url}")
-            if obj.user.profile_picture_url:
-                return obj.user.profile_picture_url
-        return "/default-profile.png" # Return a default URL if not available
+        if obj.user and obj.user.profile_image_url:
+            return obj.user.profile_image_url
+        return "/default-profile.png"
 
-    def get_user_name(self, obj): # Added this method
+    def get_user_name(self, obj):
         if obj.user and hasattr(obj.user, 'name'):
             return obj.user.name
-        return "익명" # Default to "익명" if user or user.name is not available
+        return "익명"
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
