@@ -97,53 +97,65 @@ class ChatBotHandler:
             )
 
     def _handle_awaiting_description_state(self):
-        if not self.message: 
+        if not self.message:
             self.response = self.build_response(reply=ChatReply.특징입력대기)
-            return 
-        
+            return
+
         InquiryLog.objects.create(session=self.session, message=self.message)
 
         try:
-            try:
-                query = GeminiService.call_gemini_for_parsing_text(self.message)
-            except Exception as e:
-                self.response = self.build_response(
-                    reply=f"{e}",
-                    choices=WELCOME_CHOICES
-                )
-                # 오류 발생 시 상태를 초기화하여 무한 루프를 방지합니다.
-                self.session.state = ChatState.IDLE
-                self.session.save(update_fields=["state", "updated_at"])
-                return 
-                
-            # query = GeminiService.call_gemini_for_parsing_text(self.message)
-            recs = LostItemsRecommander().analy_similarity_for_Tfidf(query=query, top_k=5)
+            # 1. Gemini API 호출 에러 처리
+            query = GeminiService.call_gemini_for_parsing_text(self.message)
 
-            if recs:
-                self.response = self.build_response(
-                    reply=ChatReply.유사분실물추천, 
-                    choices=SEARCH_CHOICE, 
-                    recommendations=recs
-                    )
-            else:   
-                self.response = self.build_response(
-                    reply=ChatReply.유사분실물찾지못함, 
-                    choices=SEARCH_CHOICE
-                    )
-                
-            self.session.state = ChatState.MOVE_TO_ARTICLE
-            self.session.save(update_fields=["state", "updated_at"])
-            
-        except Exception as e:
-            # Gemini 또는 Recommender 서비스에서 오류 발생 시 처리
-            print(f"Error in awaiting description state: {e}")
+        except ValueError as e: # Gemini 응답 파싱 실패
+            print(f"Gemini 응답 파싱 오류: {e}")
             self.response = self.build_response(
-                reply=ChatReply.오류발생,
+                reply=f"Gemini 응답 파싱 오류: {e}",
                 choices=WELCOME_CHOICES
             )
-            # 오류 발생 시 상태를 초기화하여 무한 루프를 방지합니다.
             self.session.state = ChatState.IDLE
             self.session.save(update_fields=["state", "updated_at"])
+            return
+
+        except Exception as e: # 그 외 Gemini 관련 오류
+            print(f"Gemini API 호출 오류: {e}")
+            self.response = self.build_response(
+                reply=f"Gemini API 호출 오류: {e}",
+                choices=WELCOME_CHOICES
+            )
+            self.session.state = ChatState.IDLE
+            self.session.save(update_fields=["state", "updated_at"])
+            return
+            
+        try:
+            # 2. 추천 로직 에러 처리
+            recs = LostItemsRecommander().analy_similarity_for_Tfidf(query=query, top_k=5)
+            
+        except Exception as e:
+            print(f"추천 로직 오류: {e}")
+            self.response = self.build_response(
+                reply="추천 로직 오류: {e}",
+                choices=WELCOME_CHOICES
+            )
+            self.session.state = ChatState.IDLE
+            self.session.save(update_fields=["state", "updated_at"])
+            return
+            
+        # 3. 정상적인 경우의 로직
+        if recs:
+            self.response = self.build_response(
+                reply=ChatReply.유사분실물추천,
+                choices=SEARCH_CHOICE,
+                recommendations=recs
+            )
+        else:
+            self.response = self.build_response(
+                reply=ChatReply.유사분실물찾지못함,
+                choices=SEARCH_CHOICE
+            )
+        
+        self.session.state = ChatState.MOVE_TO_ARTICLE
+        self.session.save(update_fields=["state", "updated_at"])
 
     def _handle_move_to_article_state(self):
         if self.message:
