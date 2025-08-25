@@ -154,18 +154,17 @@ class StartChatView(APIView):
 
         user2 = post.user
 
-        # Check for an existing room between the two users for this specific post
-        existing = ChatRoom.objects.filter(
+        # Check for an existing room for this specific post, regardless of users
+        existing_room = ChatRoom.objects.filter(
             post_type=post_type,
-            post_id=post_id,
-            user_a=user1,
-            user_b=user2
+            post_id=post_id
         ).first()
-    
-        if existing:
+
+        if existing_room:
+            # If a room for this post already exists, return it
             return Response({
                 "status": "success",
-                "data": {"room_id": existing.id},
+                "data": {"room_id": existing_room.id},
                 "message": "기존 채팅방 반환"
             })
 
