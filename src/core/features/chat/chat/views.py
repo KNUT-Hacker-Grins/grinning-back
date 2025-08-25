@@ -162,7 +162,7 @@ class StartChatView(APIView):
         
         room = ChatRoom.objects.create(post_type=post_type, post_id=post_id)
         user1 = request.user if request.user.is_authenticated else None
-        user2 = post.user if post.user.is_staff else None
+        user2 = post.user if post.user else None
         room = ChatRoom.objects.create(
             user_a=user1,
             user_b=user2

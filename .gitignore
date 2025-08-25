@@ -2,7 +2,7 @@ printf '
 # Environments & Credentials
 venv/
 .env
-*.env
+# *.env
 
 # Python & Django Cache
 **/__pycache__/
@@ -28,5 +28,3 @@ Unit6-front-/
 
 # Django Migrations 
 **/migrations/
-
-' > .gitignore

@@ -3,7 +3,7 @@ from .models import ChatSession
 from django.utils import timezone
 
 COOKIE_NAME = "chat_session_id"
-
+    
 def _ensure_session_by_id(session_id, state="idle"):
     if not session_id:
         session_id = uuid.uuid4().hex[:16]

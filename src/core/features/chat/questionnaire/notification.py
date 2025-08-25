@@ -1,6 +1,6 @@
 from typing import Tuple, Dict, Any
 from django.utils import timezone
-from ..models import Questionnaire, NotificationLog
+from .models import Questionnaire, NotificationLog
 
 class NotificationService:
     @staticmethod

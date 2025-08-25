@@ -3,19 +3,17 @@ from django.db import models
 from django.utils import timezone
 from core.features.chat.chat.models import ChatRoom
 
-class ChatState(models.TextChoices):
+class QuestionState(models.TextChoices):
     INIT = "INIT"
     ASK_DESC = "ASK_DESC"      # 무엇을 잃어버렸나요?
     ASK_PLACE = "ASK_PLACE"    # 어디서 잃어버렸나요?
     ASK_TIME = "ASK_TIME"      # 언제 잃어버렸나요?
     DONE = "DONE"
 
-class ChatSession(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # 프론트가 쓰는 세션 식별자(쿠키/URL로 사용). 사람이 읽기 좋은 별도 토큰을 두고 싶으면 추가
+class QuestionSession(models.Model):
     session_id = models.CharField(max_length=64, unique=True, db_index=True)
 
-    state = models.CharField(max_length=16, choices=ChatState.choices, default=ChatState.INIT)
+    state = models.CharField(max_length=16, choices=QuestionState.choices, default=QuestionState.INIT)
 
     # 사용자 응답 누적
     lost_desc = models.TextField(null=True, blank=True)   # 무엇
