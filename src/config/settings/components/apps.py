@@ -1,5 +1,4 @@
 INSTALLED_APPS = [
-    'channels', 
     'corsheaders',
     'django_extensions',
     'storages',
