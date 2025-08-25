@@ -31,7 +31,7 @@ jobs:
           script: |
             # 프로젝트 폴더로 이동
             cd /home/ubuntu/Unit6-back
-            
+
             git fetch --all
             git reset --hard origin/main
             git pull origin main 
