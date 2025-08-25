@@ -104,7 +104,18 @@ class ChatBotHandler:
         InquiryLog.objects.create(session=self.session, message=self.message)
 
         try:
-            query = GeminiService.call_gemini_for_parsing_text(self.message)
+            try:
+                query = GeminiService.call_gemini_for_parsing_text(self.message)
+            except Exception as e:
+                self.response = self.build_response(
+                    reply=f"{e}",
+                    choices=WELCOME_CHOICES
+                )
+                # 오류 발생 시 상태를 초기화하여 무한 루프를 방지합니다.
+                self.session.state = ChatState.IDLE
+                self.session.save(update_fields=["state", "updated_at"])
+                return 
+                
             recs = LostItemsRecommander().analy_similarity_for_Tfidf(query=query, top_k=5)
 
             if recs:
