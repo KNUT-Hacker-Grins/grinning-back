@@ -43,16 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     profile_picture_url = models.URLField(max_length=500, blank=True, null=True)
     provider = models.CharField(max_length=30, null=True, blank=True, default='')
-    groups = models.ManyToManyField(
-        'auth.Group',
-        blank=True,
-        related_name="accounts_user_groups"
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        blank=True,
-        related_name="accounts_user_permissions"
-    )
+    
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
