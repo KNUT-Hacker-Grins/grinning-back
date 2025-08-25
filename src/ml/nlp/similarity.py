@@ -12,8 +12,17 @@ class LostItemsRecommander:
 
     @staticmethod
     def _compose_text(doc: LostItem) -> str:
-        parts = [doc.title or "", doc.description or "", doc.category or "", doc.color or ""]
-        return " ".join(parts)
+        category = doc.category
+        if isinstance(category, list):
+            category = " ".join(map(str, category))
+
+        parts = [
+            doc.title or "", 
+            doc.description or "", 
+            str(category) or "", 
+            doc.color or ""
+        ]
+        return " ".join(filter(None, parts))
 
     def analy_similarity_for_Tfidf(self, query: str, top_k: int = 5):
         # 최신순 일부만 로드 후 리스트화(인덱싱 안전)
