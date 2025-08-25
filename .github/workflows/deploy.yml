@@ -31,11 +31,6 @@ jobs:
           script: |
             # 프로젝트 폴더로 이동
             cd /home/ubuntu/Unit6-back
-            
-            # --- .env 파일 생성 ---
-            cat > .env << 'EOF'
-            ${{ secrets.EC2_ENV_FILE }}
-            EOF
 
             git fetch --all
             git reset --hard origin/main

@@ -116,6 +116,7 @@ class ChatBotHandler:
                 self.session.save(update_fields=["state", "updated_at"])
                 return 
                 
+            # query = GeminiService.call_gemini_for_parsing_text(self.message)
             recs = LostItemsRecommander().analy_similarity_for_Tfidf(query=query, top_k=5)
 
             if recs:
