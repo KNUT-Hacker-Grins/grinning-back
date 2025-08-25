@@ -1,8 +1,8 @@
 printf '
 # Environments & Credentials
 venv/
-.env
-# *.env
+# .env
+*.env
 
 # Python & Django Cache
 **/__pycache__/
