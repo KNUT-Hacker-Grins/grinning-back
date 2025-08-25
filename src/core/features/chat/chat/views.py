@@ -79,8 +79,8 @@ class ChatRoomListView(APIView):
 
     def get(self, request):
         user = request.user if request.user.is_authenticated else None
-        if not user:
-            return Response({"items": []})
+        # if not user:
+        #     return Response({"items": []})
 
         # Correctly filter for rooms where the user is either user_a or user_b
         rooms = ChatRoom.objects.filter(Q(user_a=user) | Q(user_b=user)).distinct()
