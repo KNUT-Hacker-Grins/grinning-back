@@ -57,6 +57,7 @@ class LostItemsRecommander:
                 "id": it.id,
                 "title": it.title,
                 "description": it.description,
+                "image_urls": it.image_urls,
                 "category": it.category,
                 "color": it.color,
                 "score": float(sims[int(idx)]),
