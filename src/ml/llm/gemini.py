@@ -48,8 +48,12 @@ class GeminiService:
 
     @staticmethod
     def transform_json2txt_for_gemini(dic: Dict[str, Any]) -> str:
+        raw = dic.get("raw", "")
+        if isinstance(raw, list):
+            raw = " ".join(map(str, raw))
+
         return " ".join([
             str(dic.get("category", "")).strip(),
             str(dic.get("color", "")).strip(),
-            str(dic.get("raw", "")).strip(),
+            str(raw).strip(),
         ]).strip()
