@@ -35,6 +35,16 @@ class LostItemResponseSerializer(serializers.ModelSerializer):
         read_only_fields = fields # Make all fields read-only for this response serializer
 
     def to_representation(self, instance):
+        # --- Start Debugging ---
+        print(f"--- Debugging LostItem ID: {instance.id} ---")
+        if instance.user:
+            print(f"User object exists. User ID: {instance.user.id}, User Name: {instance.user.name}")
+            print(f"Profile Picture URL from DB: '{instance.user.profile_picture_url}' (Type: {type(instance.user.profile_picture_url)})")
+        else:
+            print("User object is None.")
+        print("-------------------------------------------")
+        # --- End Debugging ---
+
         ret = super().to_representation(instance)
         
         # Ensure image_urls is always a list
