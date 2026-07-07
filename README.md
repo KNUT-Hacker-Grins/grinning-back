@@ -15,9 +15,9 @@ AI 기술을 활용해 습득물 사진을 자동 분류하고, 지능형 매칭
 
 ## 👥 팀원 정보
 | 사진 | GitHub | 담당 기능 |
-| :---: | :--- | :--- |
-| ![kth4778](https://github.com/kth4778.png?size=100) | [kth4778](https://github.com/kth4778) | 로그인 기능 개발, 경찰청 습득물 API 명세서 작성, 기획 및 로고 디자인 제작 |
-| ![joon0890](https://github.com/jwhitekim.png?size=100) | [joon0890](https://github.com/jwhitekim) | YOLO AI 모델 개발, 챗봇 AI 담당, 게시판 처리 |
+| :---: | :---: | :--- |
+| <img src="https://github.com/kth4778.png?size=100" width="90" alt="kth4778"/> | [@kth4778](https://github.com/kth4778) | - 로그인 기능 개발<br>- 경찰청 습득물 API 명세서 작성<br>- 기획 및 로고 디자인 제작 |
+| <img src="https://github.com/jwhitekim.png?size=100" width="90" alt="joon0890"/> | [@joon0890](https://github.com/jwhitekim) | - YOLO AI 모델 개발<br>- 챗봇 AI 담당<br>- 게시판 처리 |
 
 ## 📸 화면별 이미지
 
