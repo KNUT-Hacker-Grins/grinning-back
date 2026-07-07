@@ -6,18 +6,18 @@ from django.conf.urls.static import static
 # 기존 urlpatterns
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api/classify/', include('core.ai_gateway.urls')),
-    path('api/chat/', include('core.features.chat.chat.urls')), 
-    path('api/chatbot/', include('core.features.chat.chatbot.urls')), 
-    path('api/question/', include('core.features.chat.questionnaire.urls')), 
-    path('api/', include('core.features.accounts.urls')),
-    path('api/found-items/', include('core.features.lostfound.found_items.urls')), 
-    path('api/lost-items/', include('core.features.lostfound.lost_items.urls')),
-    path('api/', include('core.features.lostfound.reports.urls')),
-    path('api/stats/', include('core.integrations.lost_insight.urls')),
-    path('api/map/', include('core.integrations.map_api.urls')),
-    path('api/upload/', include('core.integrations.uploads.urls')),
-    path('api/police/', include('core.integrations.police.urls')),
+    path('api/classify/', include('apps.ai_gateway.urls')),
+    path('api/chat/', include('apps.chat.messaging.urls')), 
+    path('api/chatbot/', include('apps.chat.chatbot.urls')),
+    path('api/question/', include('apps.chat.questionnaire.urls')), 
+    path('api/', include('apps.accounts.urls')),
+    path('api/found-items/', include('apps.lostfound.found_items.urls')), 
+    path('api/lost-items/', include('apps.lostfound.lost_items.urls')),
+    path('api/', include('apps.lostfound.reports.urls')),
+    path('api/stats/', include('apps.lost_insight.urls')),
+    path('api/map/', include('apps.map_api.urls')),
+    path('api/upload/', include('apps.uploads.urls')),
+    path('api/police/', include('apps.police.urls')),
 ]
 
 # 개발환경에서만 미디어 파일 서빙
