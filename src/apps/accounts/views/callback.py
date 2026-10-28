@@ -67,7 +67,7 @@ def google_callback(request):
                 }
             })
         else:    
-            base_url = 'https://unit6-front.vercel.app/login/callback'
+            base_url = f"{settings.FRONTEND_BASE_URL.rstrip('/')}/login/callback"
             query_params = urlencode({'access': access_token, 'refresh': refresh_token})
             redirect_url = f'{base_url}?{query_params}'
 
@@ -118,7 +118,7 @@ def kakao_callback(request):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        base_url = 'https://unit6-front.vercel.app/login/callback'
+        base_url = f"{settings.FRONTEND_BASE_URL.rstrip('/')}/login/callback"
         query_params = urlencode({'access': access_token, 'refresh': refresh_token})
         redirect_url = f'{base_url}?{query_params}'
 
