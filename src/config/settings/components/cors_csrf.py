@@ -1,8 +1,14 @@
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://unit6frontdx-2swg.vercel.app",
-    "https://unit6-front.vercel.app",
-]
+from decouple import Csv, config
+
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default=(
+        'http://localhost:3000,'
+        'https://unit6frontdx-2swg.vercel.app,'
+        'https://unit6-front.vercel.app'
+    ),
+    cast=Csv(),
+)
 
 ALLOWED_HOSTS = [
     "54.180.86.22",
